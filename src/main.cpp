@@ -2,12 +2,13 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h> 
+#include <Eigen/Core>
 #include "Hopper2dConfig.h"
-#include "animate.h"
+#include "animate.hpp"
 
 
 #include <filesystem>
-#include <hopper_simulate.h>
+#include <hopper_simulate.hpp>
 //#include "gen.h"
 
 namespace fs = std::filesystem;
@@ -21,6 +22,5 @@ int main(int argc, char* argv[]){
 
     hopper_simulate();
 
-    animate();
     return 0;
 }

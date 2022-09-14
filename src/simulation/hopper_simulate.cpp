@@ -1,8 +1,11 @@
-#include "hopper_simulate.h"
+#include "animate.hpp"
+#include "hopper_simulate.hpp"
 
 using namespace casadi;
 using namespace std;
 void hopper_simulate(){
+
+    
 
     //robot property
     double mbody = 4; double m0 = 0.3; double m1 = 0.5; double m2 = 0.1;  // Mass
@@ -18,16 +21,19 @@ void hopper_simulate(){
     int dim = 12;
     vector<double> parameter = {mbody, Ibody, m0, m1, m2, I0, I1, I2, c0, c1, c2, l0, l1, l2, l21, gravity, lbody};
     Eigen::VectorXd z0(12); z0<< 0.0, 0.4, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
-    std::cout << "z0\n" << z0<< '\n';  
 
     Eigen::MatrixXd z_out(dim,num_sim_step);
     vector<double> taus = {0,0,0};
-    z_out.block(0,0,12,1) = z0;
-    std::cout << "z_out " << z_out.block(0,0,12,12)<< '\n';  
-    for(int i = 0; i < 1; i++){
-        dynamics(z_out.block(0,i,12,1), parameter, taus);
-        
+    z_out.block(0,0,dim,1) = z0;
+    for(int i = 0; i < num_sim_step-1; i++){
+        Eigen::VectorXd dz = dynamics(z_out.block(0,i,12,1), parameter, taus);
+        z_out.block(0,i+1,dim,1) = z_out.block(0,i,dim,1) + dz * sim_dt;
+        cout<< "i: "<<i<<endl;
     }
     
+    cout<< z_out.block(0,num_sim_step-20,dim,10);
+
+    animate(z_out, parameter);
     
+
 }

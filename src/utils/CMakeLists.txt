@@ -1,1 +1,1 @@
-add_library(dmToEigen dmToEigen.cpp dmToEigen.h)
+add_library(dmToEigen dmToEigen.cpp)

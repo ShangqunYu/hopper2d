@@ -1,10 +1,11 @@
+#pragma once
 #include <casadi/casadi.hpp>
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <vector>
 #include <typeinfo>
-#include "../utils/dmToEigen.h"
+#include "../utils/dmToEigen.hpp"
 using namespace std;
 
 //template <typename Derived>
-void dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus);
+Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus);

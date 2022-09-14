@@ -1,4 +1,4 @@
-#include "dmToEigen.h"
+#include "dmToEigen.hpp"
 
 Eigen::MatrixXd dmToEigen(vector<DM> &m){
     std::pair<int, int> sizes = m[0].size();
@@ -15,4 +15,9 @@ Eigen::MatrixXd dmToEigen(vector<DM> &m){
 
     }
     return e;
+}
+
+
+void print_hello(){
+    cout<<"hello"<<endl;
 }

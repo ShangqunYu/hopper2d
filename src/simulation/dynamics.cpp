@@ -1,8 +1,8 @@
-#include "dynamics.h"
+#include "dynamics.hpp"
 using namespace casadi;
 
 
-void dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus){
+Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus){
     //getting A matrix
     Function f_A = external("A", "../lib/A.so"); 
     vector<double> z_vec(z.data(), z.data() + z.rows() * z.cols());
@@ -26,7 +26,13 @@ void dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vec
     //create dz
     int dim = z.size();
     Eigen::VectorXd dz = Eigen::VectorXd::Zero(dim);
-    cout<< "my vector \n" << dz<<endl;
+    //cout<<z<<endl;
+    dz.segment(0,dim/2) = z.block(dim/2,0,dim/2,1);
+    dz.segment(dim/2,dim/2) = qdd;
+
+    //cout<< "my vector \n" << dz <<endl;
+    //cout<< "my vector \n" << z.block(dim/2,0,dim/2,1) <<endl;
 
     
+    return dz;
 }

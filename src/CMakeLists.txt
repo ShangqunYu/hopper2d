@@ -16,12 +16,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 configure_file(Hopper2dConfig.h.in Hopper2dConfig.h)
 
-# add the executable
-add_executable(hopper2d main.cpp)
-
-add_subdirectory(render)
 add_subdirectory(simulation)
 add_subdirectory(utils)
+add_subdirectory(render)
+
+# add the executable
+add_executable(hopper2d main.cpp ) 
+
+
+ 
 
 target_include_directories(hopper2d PUBLIC
                            "${PROJECT_BINARY_DIR}"
@@ -29,9 +32,12 @@ target_include_directories(hopper2d PUBLIC
                             PUBLIC simulation
                             PUBLIC utils)
 
+                          
+
 message(STATUS "${PROJECT_BINARY_DIR}")
 
 
-target_link_libraries(hopper2d animate hopper_simulate dmToEigen casadi sfml-graphics)
+target_link_libraries(hopper2d hopper_simulate dmToEigen casadi)
+#target_link_libraries(hopper2d hopper_simulate dmToEigen casadi sfml-graphics)
 
 
