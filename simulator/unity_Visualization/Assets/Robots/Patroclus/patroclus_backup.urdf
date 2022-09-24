@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<robot name="patroclus" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--<selfCollide>true</selfCollide>-->
+  <link name="torso">
+    <inertial>
+      <mass value="5.70984"/>
+      <origin xyz="0.03963 0.001 -0.030"/>
+      <inertia ixx="0.03286" ixy="-0.00006" ixz="-0.00024" iyy="0.03365" iyz="0.00535" izz="0.00916"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/torso.dae" scale="1 1 1"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <!--<collision>-->
+        <!--<geometry>-->
+            <!--<mesh filename="meshes/torso.dae"/>-->
+        <!--</geometry>-->
+        <!--<origin rpy="0 0 0" xyz="0 0 0"/>-->
+    <!--</collision>-->
+    <collision>
+        <geometry>
+            <mesh filename="meshes/torso.dae"/>
+            <!--<mesh filename="meshes/torso.obj"/>-->
+            <!--<cylinder length="0.6" radius="0.13"/>-->
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+
+  <!--Right Leg-->
+  <joint name="torso_to_hip_r_j" type="continuous">
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="0.0015 -0.045 -0.06827"/>
+    <parent link="torso"/>
+    <child link="hip_r"/>
+  </joint>
+  <link name="hip_r">
+    <inertial>
+      <mass value="0.53974"/>
+      <origin xyz="0.05445 -0.00295 -0.0003"/>
+      <inertia ixx="0.000439" ixy="-0.000004" ixz="-0.000004" iyy="0.000759" iyz="0.000003" izz="0.000498"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/hip_r.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0.0015 -0.045 -0.06827"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/hip_r.obj"/>-->
+            <mesh filename="meshes/hip_r.dae"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="hip_r_to_thigh_r_j" type="continuous">
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0.059 -0.01525 0"/>
+    <parent link="hip_r"/>
+    <child link="thigh_r"/>
+  </joint>
+  <link name="thigh_r">
+    <inertial>
+      <mass value="0.7441"/>
+      <origin xyz="0.0014 -0.0317 -0.0206"/>
+      <inertia ixx="0.002522" ixy="0.00002" ixz="-0.00012" iyy="0.00266" iyz="-0.0003" izz="0.000657"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/thigh_r.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0.059 -0.01525 0"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/thigh_r.obj"/>-->
+            <mesh filename="meshes/thigh_r.dae"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="thigh_r_to_shank_r_j" type="continuous">
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0.01741 -0.05129 -0.2078"/>
+    <parent link="thigh_r"/>
+    <child link="shank_r"/>
+  </joint>
+  <link name="shank_r">
+    <inertial>
+      <mass value="0.12521"/>
+      <origin xyz="0.0030 -0.0013 -0.0705"/>
+      <inertia ixx="0.000793" ixy="0.000001" ixz="-0.00003" iyy="0.000801" iyz="-0.000017" izz="0.000019"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/shank_r.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0 -0.05129 -0.2078"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/shank_r.obj"/>-->
+            <mesh filename="meshes/shank_r.dae"/>
+            <!--<cylinder length="0.25" radius="0.04"/>-->
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+
+  <!--Left Leg-->
+  <joint name="torso_to_hip_l_j" type="continuous">
+    <axis xyz="1 0 0"/>
+    <origin rpy="0 0 0" xyz="0.0015 0.045 -0.06827"/>
+    <parent link="torso"/>
+    <child link="hip_l"/>
+  </joint>
+  <link name="hip_l">
+    <inertial>
+      <mass value="0.53974"/>
+      <origin xyz="0.05445 0.00295 -0.0003"/>
+      <inertia ixx="0.000439" ixy="-0.000004" ixz="-0.000004" iyy="0.000759" iyz="0.000003" izz="0.000498"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/hip_l.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0.0015 -0.045 -0.06827"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/hip_l.obj"/>-->
+            <mesh filename="meshes/hip_l.dae"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="hip_l_to_thigh_l_j" type="continuous">
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0 0" xyz="0.059 0.01525 0"/>
+    <parent link="hip_l"/>
+    <child link="thigh_l"/>
+  </joint>
+  <link name="thigh_l">
+    <inertial>
+      <mass value="0.7441"/>
+      <origin xyz="0.0014 0.0317 -0.0206"/>
+      <inertia ixx="0.002522" ixy="0.00002" ixz="-0.00012" iyy="0.00266" iyz="-0.0003" izz="0.000657"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/thigh_l.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0.059 0.01525 0"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/thigh_l.obj"/>-->
+            <mesh filename="meshes/thigh_l.dae"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="thigh_l_to_shank_l_j" type="continuous">
+    <axis xyz="0 1 0"/>
+    <!--<origin rpy="0 0 0" xyz="0 0.05129 -0.2078"/>-->
+    <origin rpy="0 0 0" xyz="0.01741 0.05129 -0.2078"/>
+    <parent link="thigh_l"/>
+    <child link="shank_l"/>
+  </joint>
+  <link name="shank_l">
+    <inertial>
+      <mass value="0.12521"/>
+      <origin xyz="0.0030 0.0013 -0.0705"/>
+      <inertia ixx="0.000793" ixy="0.000001" ixz="-0.00003" iyy="0.000801" iyz="-0.000017" izz="0.000019"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/shank_l.dae" scale="1 1 1"/>
+      </geometry>
+      <!--<origin rpy="0 0 0" xyz="0 0.05129 -0.2078"/>-->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <!--<mesh filename="meshes/shank_l.obj"/>-->
+            <mesh filename="meshes/shank_l.dae"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+  </link>
+
+</robot>

@@ -1,0 +1,57 @@
+*.x86_64
+*.so
+*.debug
+.DS_Store
+
+build
+Assets/lcm-types/*.cs
+Assets/lcm-types/*.cs.meta
+
+#Logs
+tags
+
+*_Data/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+*_i.c
+*_p.c
+*.ilk
+# *.meta
+# *.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+.builds
+
+
+# Unity generated 
+Temp/
+Obj/
+UnityGenerated/
+Library/
+[Bb]in/
+
+# monodevelop/visual studio generated
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
