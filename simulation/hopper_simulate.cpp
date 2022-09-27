@@ -1,4 +1,3 @@
-#include "animate.hpp"
 #include "hopper_simulate.hpp"
 
 using namespace casadi;
@@ -28,12 +27,13 @@ void hopper_simulate(){
     for(int i = 0; i < num_sim_step-1; i++){
         Eigen::VectorXd dz = dynamics(z_out.block(0,i,12,1), parameter, taus);
         z_out.block(0,i+1,dim,1) = z_out.block(0,i,dim,1) + dz * sim_dt;
-        cout<< "i: "<<i<<endl;
+        //cout<< "i: "<<i<<endl;
     }
     
-    cout<< z_out.block(0,num_sim_step-20,dim,10);
+    //cout<< z_out.block(0,num_sim_step-20,dim,10);
+    Animator animator(parameter);
 
-    animate(z_out, parameter);
+    animator.animate(z_out);
     
 
 }

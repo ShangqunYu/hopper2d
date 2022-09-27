@@ -4,6 +4,6 @@
 #include <cmath>
 #include <Eigen/Core>
 #include "dynamics.hpp"
-#include "animate.hpp"
+#include "Animator.hpp"
 #include "../utils/eigenHelper.hpp"
 void hopper_simulate();

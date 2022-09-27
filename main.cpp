@@ -4,7 +4,7 @@
 #include <stdlib.h> 
 #include <Eigen/Core>
 #include "Hopper2dConfig.h"
-#include "animate.hpp"
+#include "Animator.hpp"
 #include "CartPoleDynamics.hpp"
 
 #include <filesystem>

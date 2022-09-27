@@ -24,11 +24,11 @@ Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<doub
     //std::unique_ptr<int[]>  container(new double[6]);
     b_hopper(z_vecp, tausp, pp, container);
     
-    cout<<"matrix size:"<<b_matrix.rows()<<" "<<b_matrix.cols()<<endl;
+    //cout<<"matrix size:"<<b_matrix.rows()<<" "<<b_matrix.cols()<<endl;
     Eigen::MatrixXd b_matrix_temp = arrayToEigen(container, 6, 1);
-    cout<< b_matrix_temp << endl;
-    cout<< "compare:"<<endl;
-    cout<<b_matrix<<endl;
+    //cout<< b_matrix_temp << endl;
+    //cout<< "compare:"<<endl;
+    //cout<<b_matrix<<endl;
     
 
     //taking the inverse of A matrix

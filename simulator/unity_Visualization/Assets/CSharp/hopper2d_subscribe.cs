@@ -6,11 +6,15 @@ using LCM;
 
 public class hopper2d_subscribe : MonoBehaviour
 {
+    public Transform torso;
+    public Transform link_zero;
     public Transform link_first;
     public Transform link_second;
     //
     //protected Transform link_first;
 
+    public static float[] torso_pos = new float[3];
+    public static float[] link0_pos = new float[3];
     public static float[] link1_pos = new float[3];
     public static float[] link2_pos = new float[3];
 
@@ -18,8 +22,10 @@ public class hopper2d_subscribe : MonoBehaviour
     void Start()
     {
         StartCoroutine("Listener");
-        this.link_first = this.transform.GetChild(0);
-        this.link_second = this.transform.GetChild(1);
+        this.torso = this.transform.GetChild(0);
+        this.link_zero = this.transform.GetChild(1);
+        this.link_first = this.transform.GetChild(2);
+        this.link_second = this.transform.GetChild(3);
         //Debug.Log(this.transform.childCount);
         //this.link2 = this.transform.GetChild(1);
     }
@@ -27,17 +33,14 @@ public class hopper2d_subscribe : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //((Transform)link_first).position = new Vector3(0., 0.7, 0.);
-        //this.link2.position = new Vector3(0., 0.4, 0.);
-        //this.transform.GetChild(0).position = new Vector3(0,0.7, 0.);
-        //Debug.Log("what");
-        //this.transform.position = new Vector3(0,0.7, 0.);
-        //float x = this.transform.position.x;
-        //x = 3;
-        //Vector3 c = this.transform.position;
-        //this.transform.GetChild(0).position = new Vector3(link1_pos[0],link1_pos[1],0);
+        this.torso.localPosition = new Vector3(torso_pos[0],torso_pos[1], 0);
+        this.torso.localRotation = Quaternion.Euler(0, 0, (float)(torso_pos[2]*180/Math.PI));
+
+        this.link_zero.localPosition = new Vector3(link0_pos[0],link0_pos[1],0);
+        this.link_zero.localRotation = Quaternion.Euler(0, 0, (float)(link0_pos[2]*180/Math.PI));
+
         this.link_first.localPosition = new Vector3(link1_pos[0],link1_pos[1],0);
-        this.link_first.localRotation = Quaternion.Euler(0, 0, link1_pos[2]);
+        this.link_first.localRotation = Quaternion.Euler(0, 0, (float)(link1_pos[2]*180/Math.PI));
 
         this.link_second.localPosition = new Vector3(link2_pos[0],link2_pos[1],0);
         this.link_second.localRotation = Quaternion.Euler(0, 0, (float)(link2_pos[2]*180/Math.PI));
@@ -65,17 +68,19 @@ public class hopper2d_subscribe : MonoBehaviour
         public void MessageReceived(LCM.LCM.LCM lcm, string channel, LCM.LCM.LCMDataInputStream dins)
         {
             Debug.Log ("RECV: " + channel);
-            if (channel == "cart_pole")
+            if (channel == "hopper2d")
             {
-                LCMTypes.cart_pole_lcmt msg = new LCMTypes.cart_pole_lcmt(dins);
-                String message = "Received message of the type cart_pole:\n ";
-                message+=String.Format("  link 1 = ({0:N}, {1:N}, {2:N})\n ",
-                        msg.link1_pos[0], msg.link1_pos[1], msg.link1_pos[2]);
-                message+=String.Format("  link 2 = ({0:N}, {1:N}, {2:N})\n",
-                        msg.link2_pos[0], msg.link2_pos[1], msg.link2_pos[2]);
+                LCMTypes.hopper2d_lcmt msg = new LCMTypes.hopper2d_lcmt(dins);
+                String message = "Received message of the type hopper2d:\n ";
+                message+=String.Format("  torso = ({0:N}, {1:N}, {2:N})\n ",
+                        msg.torso_pos[0], msg.torso_pos[1], msg.torso_pos[2]);
+                message+=String.Format("  link 0 = ({0:N}, {1:N}, {2:N})\n",
+                        msg.link0_pos[0], msg.link0_pos[1], msg.link0_pos[2]);
                 Debug.Log (message);
 
                 for(int i = 0; i<3; ++i){
+                    torso_pos[i] = msg.torso_pos[i];
+                    link0_pos[i] = msg.link0_pos[i];
                     link1_pos[i] = msg.link1_pos[i];
                     link2_pos[i] = msg.link2_pos[i];
                 }

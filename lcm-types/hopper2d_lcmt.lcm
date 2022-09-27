@@ -1,0 +1,8 @@
+struct hopper2d_lcmt
+{
+    float torso_pos[3];
+    float link0_pos[3];
+    float link1_pos[3];
+    float link2_pos[3];
+}
+
