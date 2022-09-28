@@ -1,1 +1,1 @@
-add_library(matlab_gen b_hopper.cpp)
+add_library(matlab_gen A_hopper.cpp b_hopper.cpp jacobian_a.cpp jacobian_b.cpp jacobian_c.cpp jacobian_e.cpp jacobian_h.cpp jacobian_i.cpp jacobian_j.cpp jacobian_k.cpp position_contact_points.cpp velocity_contact_points.cpp jacobians_manager.cpp)

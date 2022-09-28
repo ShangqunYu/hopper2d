@@ -50,8 +50,12 @@ void Animator::send_message(){
     double y_l1 = O_y - l0 * cos(l0_angle) - l1/2 * cos(l1_angle);
     double q2 = _cur_state[5];
     double l2_angle = theta + q0+q1+q2+M_PI/2;
-    double x_l2 = O_x + l0 * sin(l0_angle) + l1 * sin(l1_angle);
-    double y_l2 = O_y - l0 * cos(l0_angle) - l1 * cos(l1_angle);
+    double x_l1_end = O_x + l0 * sin(l0_angle) + l1 * sin(l1_angle);
+    double y_l1_end = O_y - l0 * cos(l0_angle) - l1 * cos(l1_angle);
+    double l2_c_to_l1_end = (l2+l21)/2 - l21;
+    double x_l2 = x_l1_end + l2_c_to_l1_end * sin(l2_angle);
+    double y_l2 = y_l1_end - l2_c_to_l1_end * cos(l2_angle);
+    cout<<"x_l1_end: "<<x_l1_end<<" x_l2: "<< x_l2<<endl;
     _kin_msg.torso_pos[0] = x;
     _kin_msg.torso_pos[1] = y;
     _kin_msg.torso_pos[2] = theta;

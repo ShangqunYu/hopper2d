@@ -5,6 +5,7 @@
 #include <vector>
 #include <typeinfo>
 #include "../utils/eigenHelper.hpp"
+#include "../matlab_gen/A_hopper.h"
 #include "../matlab_gen/b_hopper.h"
 
 using namespace std;
