@@ -1,9 +1,0 @@
-#pragma once
-#include <casadi/casadi.hpp>
-#include <stdlib.h> 
-#include <cmath>
-#include <Eigen/Core>
-#include "dynamics.hpp"
-#include "animate.hpp"
-#include "../utils/dmToEigen.hpp"
-void hopper_simulate();

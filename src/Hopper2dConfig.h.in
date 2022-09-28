@@ -1,3 +1,0 @@
-// the configured options and settings for Tutorial
-#define hopper2d_VERSION_MAJOR @hopper2d_VERSION_MAJOR@
-#define hopper2d_VERSION_MINOR @hopper2d_VERSION_MINOR@
