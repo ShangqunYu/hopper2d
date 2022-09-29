@@ -12,6 +12,9 @@ void hopper_simulate(){
     double l0 = 0.2; double l1 = 0.22; double l2 = 0.1;  double l21 = 0.06; double lbody = 0.3; // length of link
     double c0 = 0.1; double c1 = 0.1; double c2 = 0.07; // length to center of mass
     double gravity = 9.81; 
+    double ground_height = 0;
+    double rest_coeff = 0.1; 
+    double fric_coeff = 0.7;
 
     int n = 40;
     double tf = 0.605;
@@ -26,6 +29,7 @@ void hopper_simulate(){
     z_out.block(0,0,dim,1) = z0;
     for(int i = 0; i < num_sim_step-1; i++){
         Eigen::VectorXd dz = dynamics(z_out.block(0,i,12,1), parameter, taus);
+        Eigen::VectorXd dz_ = discrete_contact_dynamics(z_out.block(0,i,12,1), parameter, rest_coeff, fric_coeff, ground_height);
         z_out.block(0,i+1,dim,1) = z_out.block(0,i,dim,1) + dz * sim_dt;
         //cout<< "i: "<<i<<endl;
     }

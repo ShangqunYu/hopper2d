@@ -7,8 +7,13 @@
 #include "../utils/eigenHelper.hpp"
 #include "../matlab_gen/A_hopper.h"
 #include "../matlab_gen/b_hopper.h"
-
+#include "../matlab_gen/position_contact_points.h"
+#include "../matlab_gen/velocity_contact_points.h"
+#include "../matlab_gen/jacobians_manager.hpp"
 using namespace std;
 
 //template <typename Derived>
 Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus);
+
+
+Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, double rest_coeff, double fric_coeff, double ground_height);

@@ -6,4 +6,5 @@
 #include "jacobian_i.h"
 #include "jacobian_j.h"
 #include "jacobian_k.h"
-
+#include "jacobian_rbody.h"
+void jacobians(const double in1[12], const double in2[17], int i, double J_a[18]);
