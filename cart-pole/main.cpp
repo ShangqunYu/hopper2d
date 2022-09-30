@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
         if(i%10 == 0){
           dyn.send_message();
         }
-        usleep(1000);
+        usleep(100);
     }
 
     return 0;
