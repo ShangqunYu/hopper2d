@@ -27,6 +27,7 @@ void hopper_simulate(){
     vector<double> taus = {0,0,0};
     z_out.block(0,0,dim,1) = z0;
     for(int i = 0; i < num_sim_step-1; i++){
+        taus =  basic_control(z0, z_out.block(0,i,dim,1));
         Eigen::VectorXd dz = dynamics(z_out.block(0,i,dim,1), parameter, taus);
         
         z_out.block(0,i+1,dim,1) = z_out.block(0,i,dim,1) + dz * sim_dt;
@@ -42,4 +43,15 @@ void hopper_simulate(){
     animator.animate(z_out);
     
 
+}
+
+vector<double> basic_control(Eigen::VectorXd z0, const Eigen::Ref<const Eigen::MatrixXd>& z){
+    double k_th = 50;
+    double D_th = 0.05;
+    Eigen::VectorXd q_des = z0.block(3,0,3,1);
+    Eigen::VectorXd q_cur =  z.block(3,0,3,1);
+    Eigen::VectorXd qdot  = z.block(0,0,3,1);
+    Eigen::VectorXd tau_ = k_th * (q_des - q_cur) + D_th *(- qdot);
+    vector<double> tau(tau_.data(), tau_.data() + tau_.rows() * tau_.cols());
+    return tau;
 }
