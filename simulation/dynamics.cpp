@@ -42,7 +42,6 @@ Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd
     vector<double> z_vec(z.data(), z.data() + z.rows() * z.cols());
     // get qdot
     Eigen::VectorXd qdot = z.block<6,1>(6,0);
-    //vector<double> qdot = std::vector<double>(z_vec.begin() + dim/2, z_vec.end());
 
     // get contact point position and velocity
     double* z_vecp = &z_vec[0];
@@ -64,14 +63,12 @@ Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd
 
     int num_iteration = 1;
     
-    // cout<< "contact id:" <<contact_pts[contact_idx]<< endl<<J_matrix<<endl;
     Eigen::MatrixXd A_matrix = get_A_matrix(z_vecp, paramp);
     //taking the inverse of A matrix
     Eigen::MatrixXd A_matrix_inv = A_matrix.inverse();
     for (int i = 0; i< num_iteration; i++){
         vector<int> contact_pts;
         for (int k = 0; k < num_contact_pts; k++){
-            //cout<< "contact point: " <<k <<endl<<pose_contact_matrix(Eigen::placeholders::all,k) <<endl;
             if(pose_contact_matrix(1,k)-ground_height<0 &&   vel_contact_matrix(1,k) < 0){
                 contact_pts.push_back(k);
             }
