@@ -16,7 +16,7 @@ Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<doub
     //getting B matrix
     Eigen::MatrixXd b_matrix = get_b_matrix(z_vecp, tausp, paramp);
  
-    cout<<A_matrix<<endl;
+    //cout<<A_matrix<<endl;
     
 
     //taking the inverse of A matrix
@@ -78,7 +78,7 @@ Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd
             break;
         }
 
-        cout << endl;
+        //cout << endl;
         for (int contact_idx = 0; contact_idx < contact_pts.size(); contact_idx++){
             Eigen::VectorXd vB = vel_contact_matrix(Eigen::placeholders::all, contact_pts[contact_idx]);
             double* J; J = new double [18];

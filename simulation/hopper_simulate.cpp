@@ -26,6 +26,11 @@ void hopper_simulate(){
     Eigen::MatrixXd z_out(dim,num_sim_step);
     vector<double> taus = {0,0,0};
     z_out.block(0,0,dim,1) = z0;
+
+    // start making casadi stuff
+    casadi_int N = 40;  // prediction
+    casadi::Opti opti;
+    casadi::MX X = opti.variable(4, N + 1);
     for(int i = 0; i < num_sim_step-1; i++){
         taus =  basic_control(z0, z_out.block(0,i,dim,1));
         Eigen::VectorXd dz = dynamics(z_out.block(0,i,dim,1), parameter, taus);
@@ -38,6 +43,7 @@ void hopper_simulate(){
     }
     
     //cout<< z_out.block(0,num_sim_step-20,dim,10);
+    Function dummy = central_model_dynamics( mbody,  m0,  m1,  m2,  Ibody,  gravity,  ground_height);
     Animator animator(parameter);
 
     animator.animate(z_out);
@@ -54,4 +60,16 @@ vector<double> basic_control(Eigen::VectorXd z0, const Eigen::Ref<const Eigen::M
     Eigen::VectorXd tau_ = k_th * (q_des - q_cur) + D_th *(- qdot);
     vector<double> tau(tau_.data(), tau_.data() + tau_.rows() * tau_.cols());
     return tau;
+}
+
+Function central_model_dynamics(double mbody, double m0, double m1, double m2, double Ibody, double gravity, double ground_height){
+    double M = mbody + m0 + m1 + m2; double I = Ibody;
+    SX x = SX::sym("x"); SX y = SX::sym("y"); SX th = SX::sym("th"); 
+    SX dx = SX::sym("dx"); SX dy = SX::sym("dy"); SX dth = SX::sym("dth");
+    SX state = vertcat(x,y,th);
+    state =vertcat(state, dx,dy);
+    state = vertcat(state, dth);
+    cout<<"I am here!:" << state<<endl;
+    return Function("dynamics", {state}, {state});
+
 }
