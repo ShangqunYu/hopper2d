@@ -66,10 +66,14 @@ Function central_model_dynamics(double mbody, double m0, double m1, double m2, d
     double M = mbody + m0 + m1 + m2; double I = Ibody;
     SX x = SX::sym("x"); SX y = SX::sym("y"); SX th = SX::sym("th"); 
     SX dx = SX::sym("dx"); SX dy = SX::sym("dy"); SX dth = SX::sym("dth");
-    SX state = vertcat(x,y,th);
-    state =vertcat(state, dx,dy);
-    state = vertcat(state, dth);
+    SX state = vertcat(x,y,th); state =vertcat(state, dx,dy); state = vertcat(state, dth);
     cout<<"I am here!:" << state<<endl;
-    return Function("dynamics", {state}, {state});
+    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(3,3);
+    A(0,0) = M; A(1,1) = M; A(2,2) = I;
+    casadi::DM temp = casadi::DM::eye(3);
+
+    casadi::DM Inv_A = EigenTodm(A.inverse());
+    cout<<temp*Inv_A<<endl;
+    return Function("centroidal_dynamics", {state}, {state});
 
 }

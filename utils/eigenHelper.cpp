@@ -17,6 +17,17 @@ Eigen::MatrixXd dmToEigen(vector<DM> &m){
     return e;
 }
 
+casadi::DM EigenTodm(Eigen::MatrixXd matrix){
+    size_t rows = matrix.rows();
+    size_t cols = matrix.cols();
+
+    casadi::DM casadi_matrix = casadi::DM::zeros(rows,cols);
+
+    std::memcpy(casadi_matrix.ptr(), matrix.data(), sizeof(double)*rows*cols);
+
+    return casadi_matrix;
+}
+
 Eigen::MatrixXd arrayToEigen(double m[], int row , int col){
 
     Eigen::MatrixXd e(row,col);
