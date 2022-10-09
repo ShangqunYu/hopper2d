@@ -54,8 +54,6 @@ void hopper_simulate(){
     casadi::SX desired_state = P(casadi::Slice(n_state, n_state*2));
     cout<<desired_state.size()<<endl;
     casadi::SX g = init_state - P(casadi::Slice(0,n_state));
-    casadi::Function central_dynamics = central_model_dynamics(mbody,  m0,  m1,  m2,  Ibody,  gravity,  ground_height);
-    cout<<central_dynamics<<endl;
     for (int i = 0; i < N; i++){
         casadi::SX st = X(casadi::Slice(0,n_state), i);
         casadi::SX fx = Fx(i); casadi::SX fy = Fy(i); casadi::SX t = Tau(i); 
@@ -160,30 +158,27 @@ void hopper_simulate(){
     arg["x0"] = casadi::SX::reshape(X0, n_state*(N+1), 1);
     arg["x0"] = vertcat(arg["x0"], fx0, fy0);
     arg["x0"] = vertcat(arg["x0"], tau0);
-    cout<<arg["x0"].size()<<endl;
+    //ask casadi to solve the problem
     res = solver(arg);
-    cout << "optimal solution: " << res.at("x").size() << endl;
-
+    //get the results.
     vector<double> fxs = res.at("x")(casadi::Slice(n_state*(N+1), n_state*(N+1) + N)).get_elements();
     vector<double> fys = res.at("x")(casadi::Slice(n_state*(N+1)+N, n_state*(N+1) + 2*N)).get_elements();
     vector<double> torques = res.at("x")(casadi::Slice(n_state*(N+1)+2*N, n_state*(N+1) + 3*N)).get_elements();
-    cout<<fys[0]<<endl;
+
     double opt_horizon = N * dt; 
     double sim_time = 0;
     Eigen::VectorXd jpos_jump = z0;
     bool Left_ground = false;
+    double* J; J = new double [18];
     for(int i = 0; i < num_sim_step-1; i++){
         sim_time = sim_time + sim_dt;
+        Eigen::MatrixXd cur_z = z_out.block(0,i,dim,1);
         if (sim_time < opt_horizon){
             int input_idx = floor(sim_time/opt_horizon*N);
-            //double fx = fxs(input_idx,).get_elements();
             Eigen::Vector3d outmodel(-fxs[input_idx],-fys[input_idx],-torques[input_idx]);
-            double* J; J = new double [18];
-            vector<double> curr_z  (z_out.block(0,i,dim,1).data(), z_out.block(0,i,dim,1).data() + z_out.block(0,i,dim,1).rows()*z_out.block(0,i,dim,1).cols());
-            double* z_vecp = &curr_z[0];
-            double* paramp = &parameter[0];
-            jacobian_b(z_vecp, paramp, J);
-            Eigen::MatrixXd J_matrix = arrayToEigen(J, 3, 6);
+            vector<double> curr_z  (cur_z.data(), cur_z.data() + cur_z.rows()*cur_z.cols());
+            jacobian_b(&curr_z[0], &parameter[0], J);
+            Eigen::MatrixXd J_matrix = arrayToEigen(J, n_control, n_state);
             Eigen::VectorXd tau =  J_matrix.transpose() * outmodel;
             vector<double> tau_(tau.data(), tau.data() + tau.rows() * tau.cols());
             
@@ -192,25 +187,19 @@ void hopper_simulate(){
         }
         else{
             if (!Left_ground){
-                jpos_jump = z_out.block(0,i,dim,1);
+                jpos_jump = cur_z;
                 Left_ground = true;
             }
-            taus =  basic_control(jpos_jump, z_out.block(0,i,dim,1));
-            cout<<taus<<endl;
-            //taus = {0,0,0};
+            taus =  basic_control(jpos_jump, cur_z);
         }
         
-        Eigen::VectorXd dz = dynamics(z_out.block(0,i,dim,1), parameter, taus);
-        
-        z_out.block(0,i+1,dim,1) = z_out.block(0,i,dim,1) + dz * sim_dt;
+        Eigen::VectorXd dz = dynamics(cur_z, parameter, taus);
+        z_out.block(0,i+1,dim,1) = cur_z + dz * sim_dt;
         z_out.block(dim/2,i+1,dim/2,1)= discrete_contact_dynamics(z_out.block(0,i+1,dim,1), parameter, rest_coeff, fric_coeff, ground_height);
         z_out.block(0,i+1,dim/2,1) = z_out.block(0,i,dim/2,1) + z_out.block(dim/2,i+1,dim/2,1) * sim_dt;
-        //cout<< "i: "<<i<<endl;
-        //break;
+
     }
-    
-    //cout<< z_out.block(0,num_sim_step-20,dim,10);
-    
+    delete J;
     Animator animator(parameter);
 
     animator.animate(z_out);
@@ -244,32 +233,7 @@ casadi::SX centroidal_dynamics(SX state, SX Fx, SX Fy, SX Tau, double M,  double
     casadi::SX qddot =  casadi::SX::mtimes(A_inv, F);
     casadi::SX ds = vertcat(dx, dy, dth); ds = vertcat(ds, qddot);
 
-
     return ds;
 
 }
 
-
-Function central_model_dynamics(double mbody, double m0, double m1, double m2, double Ibody, double gravity, double ground_height){
-    double M = mbody + m0 + m1 + m2; double Inertia = Ibody;
-    SX x = SX::sym("x"); SX y = SX::sym("y"); SX th = SX::sym("th"); 
-    SX dx = SX::sym("dx"); SX dy = SX::sym("dy"); SX dth = SX::sym("dth");
-    SX Fx = SX::sym("Fx"); SX Fy = SX::sym("Fy"); SX Tau = SX::sym("tau");
-    SX state = vertcat(x,y,th); state =vertcat(state, dx,dy); state = vertcat(state, dth);
-    cout<<"I am here!:" << state.size()<<endl;
-
-    //Eigen::MatrixXd A = Eigen::MatrixXd::Zero(3,3);
-    casadi::SX A = casadi::SX::zeros(3,3);
-    A(0,0) = M; A(1,1) = M; A(2,2) = Inertia;
-    casadi::SX A_inv =  casadi::SX::inv(A);
-    casadi::SX temp1 = vertcat(x,y-ground_height, 0);
-    casadi::SX temp2 = vertcat(Fx, Fy, 0);
-
-    casadi::SX F = vertcat(Fx, Fy - M*gravity, 0) + casadi::SX::cross(temp1, temp2) + vertcat(0,0,Tau);
-    casadi::SX qddot =  casadi::SX::mtimes(A_inv, F);
-    casadi::SX ds = vertcat(dx, dy, dth); ds = vertcat(ds, qddot);
-
-
-    return Function("centroidal_dynamics", {x, y, th, dx, dy, dth, Fx, Fy, Tau}, {ds});
-
-}
