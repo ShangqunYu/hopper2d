@@ -61,7 +61,7 @@ Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd
     Eigen::VectorXd Fx = Eigen::VectorXd::Zero(num_contact_pts);
     Eigen::VectorXd dz_ = Eigen::VectorXd::Zero(dim);
 
-    int num_iteration = 1;
+    int num_iteration = 10;
     
     Eigen::MatrixXd A_matrix = get_A_matrix(z_vecp, paramp);
     //taking the inverse of A matrix

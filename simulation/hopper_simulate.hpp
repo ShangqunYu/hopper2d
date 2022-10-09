@@ -6,6 +6,7 @@
 #include "dynamics.hpp"
 #include "Animator.hpp"
 #include "../utils/eigenHelper.hpp"
+#include "../matlab_gen/jacobian_b.h"
 
 void hopper_simulate();
 
