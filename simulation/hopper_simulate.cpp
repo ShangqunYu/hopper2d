@@ -21,8 +21,6 @@ void hopper_simulate(){
     double rest_coeff = 0.2; 
     double fric_coeff = 0.7;
 
-    
-
     double tf = 0.605;
     double sim_dt = 0.001;
     int num_sim_step = floor(tf/sim_dt);
