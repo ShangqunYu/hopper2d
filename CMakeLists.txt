@@ -8,6 +8,7 @@ include_directories("/usr/local/include/eigen3/")
 # casadi
 find_package(casadi REQUIRED) 
 include_directories("/usr/local/include/casadi/")
+include_directories("/usr/local/include/")
 
 #find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 #include_directories("usr/include/SFML/")
