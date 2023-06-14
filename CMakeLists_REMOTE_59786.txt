@@ -15,7 +15,7 @@ include_directories("/usr/local/include/casadi/")
 find_package(lcm REQUIRED)
 include_directories("/usr/local/include/lcm/") 
 
-# set(CMAKE_C_FLAGS "-O3  -ggdb -std=gnu99 -I.")
+set(CMAKE_C_FLAGS "-O3  -ggdb -std=gnu99 -I.")
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/utils)
 include_directories(${CMAKE_SOURCE_DIR}/lcm-types/cpp)
@@ -29,7 +29,7 @@ configure_file(Hopper2dConfig.h.in Hopper2dConfig.h)
 
 add_subdirectory(simulation)
 add_subdirectory(utils)
-add_subdirectory(render)
+#add_subdirectory(render)
 add_subdirectory(matlab_gen)
 add_subdirectory(cart-pole)
 

@@ -2,7 +2,6 @@
 #define ANIMATE_H
 
 #include <unistd.h>
-#include <SFML/Graphics.hpp>
 #include <Eigen/Core>
 #include <iostream>
 #include <casadi/casadi.hpp>
