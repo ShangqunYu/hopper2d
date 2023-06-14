@@ -33,6 +33,15 @@ void Animator::animate(Eigen::MatrixXd z)
  
 }
 
+void Animator::render(Eigen::VectorXd z)
+{
+    _cur_state = z;
+    send_message();
+    usleep(10000);
+}
+
+
+
 
 void Animator::send_message(){
     double x = _cur_state[0];

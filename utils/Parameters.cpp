@@ -2,5 +2,27 @@
 
 Parameters::Parameters() 
 {
+    mbody = 6; m0 = 0.3; m1 = 0.5; m2 = 0.1;  
+    M = mbody + m0 + m1 + m2; // Total Mass
 
+    Ibody = 11 * pow(10,-3); I0 = 5.1 * pow(10,-6); I1 = 5.1 * pow(10,-6); I2 = 1.5 * pow(10,-6); // inertia
+
+    l0 = 0.2; l1 = 0.22; l2 = 0.1; l21 = 0.06; lbody = 0.3; // length of link
+
+    c0 = 0.1; c1 = 0.1;  c2 = 0.07; // length to center of mass
+
+    gravity = 9.81; 
+
+    ground_height = 0;
+        
+    rest_coeff = 0.2; 
+    fric_coeff = 0.7;
+    dt = 0.001;
+    dim = 12;
+    // declare a 12 dim eigen vector
+    init_state = Eigen::VectorXd::Zero(dim);
+    init_state << 0.0, 0.4, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
+
+    kp = 100;
+    kd = 10;
 };
