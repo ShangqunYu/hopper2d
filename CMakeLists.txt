@@ -9,12 +9,13 @@ include_directories("/usr/local/include/eigen3/")
 find_package(casadi REQUIRED) 
 include_directories("/usr/local/include/casadi/")
 
-find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
-include_directories("usr/include/SFML/")
+#find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
+#include_directories("usr/include/SFML/")
 
 find_package(lcm REQUIRED)
 include_directories("/usr/local/include/lcm/") 
 
+set(CMAKE_C_FLAGS "-O3  -ggdb -std=gnu99 -I.")
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/utils)
 include_directories(${CMAKE_SOURCE_DIR}/lcm-types/cpp)
@@ -28,7 +29,7 @@ configure_file(Hopper2dConfig.h.in Hopper2dConfig.h)
 
 add_subdirectory(simulation)
 add_subdirectory(utils)
-add_subdirectory(render)
+#add_subdirectory(render)
 add_subdirectory(matlab_gen)
 add_subdirectory(cart-pole)
 
