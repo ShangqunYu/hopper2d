@@ -17,6 +17,7 @@ class Animator{
         Animator(vector<double> p);
         ~Animator(){}
         void animate(Eigen::MatrixXd z);
+        void render(Eigen::VectorXd z);
         void send_message(); 
         lcm::LCM _lcm_cart;
         hopper2d_lcmt _kin_msg;   
