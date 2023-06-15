@@ -4,7 +4,7 @@
 #include <cmath>
 #include <Eigen/Core>
 #include "dynamics.hpp"
-#include "Animator.hpp"
+#include "../render/Animator.hpp"
 #include "../utils/eigenHelper.hpp"
 #include "../matlab_gen/jacobian_b.h"
 

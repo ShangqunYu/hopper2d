@@ -3,12 +3,17 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name and version
 project(hopper2d VERSION 1.0)
 
+add_subdirectory(machinelearning/pybind11)
+set(CMAKE_CXX_FLAGS "-fPIC")
+
+find_package(Python 3.10.11 COMPONENTS Interpreter Development REQUIRED)
+
 # eigen
 include_directories("/usr/local/include/eigen3/")
 # casadi
 find_package(casadi REQUIRED) 
 include_directories("/usr/local/include/casadi/")
-include_directories("/usr/local/include/")
+# include_directories("/usr/local/include/")
 
 #find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 #include_directories("usr/include/SFML/")
@@ -33,6 +38,7 @@ add_subdirectory(utils)
 add_subdirectory(render)
 add_subdirectory(matlab_gen)
 add_subdirectory(cart-pole)
+add_subdirectory(machinelearning)
 
 
 # add the executable
@@ -45,14 +51,15 @@ target_include_directories(hopper2d PUBLIC
                             PUBLIC simulation
                             PUBLIC utils
                             PUBLIC matlab_gen
-                            PUBLIC cart-pole)
+                            PUBLIC cart-pole
+                            PUBLIC machinelearning)
 
                           
 
 message(STATUS "${PROJECT_BINARY_DIR}")
 
 
-target_link_libraries(hopper2d hopper_simulate utils casadi matlab_gen cart-pole_system)
+target_link_libraries(hopper2d hopper_simulate utils casadi matlab_gen cart-pole_system animate)
 #target_link_libraries(hopper2d hopper_simulate dmToEigen casadi sfml-graphics)
 
 

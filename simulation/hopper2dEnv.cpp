@@ -2,11 +2,8 @@
 
 using namespace std;
 
-Hopper2dEnv::Hopper2dEnv():
-    animator(parameter)
+Hopper2dEnv::Hopper2dEnv() : animator(parameter)
 {
-    parameter = {p.mbody, p.Ibody, p.m0, p.m1, p.m2, p.I0, p.I1, p.I2, p.c0, p.c1, p.c2, p.l0, p.l1, p.l2, p.l21, p.gravity, p.lbody};
-    
 
  }
 
