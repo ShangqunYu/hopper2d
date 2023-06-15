@@ -16,8 +16,8 @@ class Hopper2dWrapper {
         ~Hopper2dWrapper() {
             cout << "Hopper2dWrapper destructor" << endl;
         }
-        void step(VectorXd actions) {
-            // return env.step(actions);
+        VectorXd step(VectorXd actions) {
+            return env.step(actions);
         }
         
         void render() {
@@ -26,8 +26,8 @@ class Hopper2dWrapper {
         }
 
 
-        void reset(){
-            // return env.reset();
+        VectorXd reset(){
+            return env.reset();
         }
 
         Hopper2dEnv env;
