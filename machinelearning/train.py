@@ -43,6 +43,7 @@ if __name__ == "__main__":
         action = np.array([0.0, 0.0, 0.0])
         env.step(action)
         env.render()
+        breakpoint()
         count += 1
         if count > 1000:
             break

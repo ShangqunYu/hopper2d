@@ -22,8 +22,8 @@ Parameters::Parameters()
     // declare a 12 dim eigen vector
     init_state = Eigen::VectorXd::Zero(dim);
     init_state << 0.0, 1, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
-    // init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
+    init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
-    kp = 20;
+    kp = 100;
     kd = 0.8;
 };
