@@ -1,5 +1,5 @@
 import gymnasium as gym
-from env.loco3dEnv import Loco3dEnv
+from env.hopper2dEnv import Hopper2dEnv
 import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
@@ -11,8 +11,8 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import VecExtractDictObs, VecMonitor
 
 gym.envs.register(
-        id='Loco3dEnv-v0',
-        entry_point='env:Loco3dEnv',
+        id='Hopper2dEnv-v0',
+        entry_point='env:Hopper2dEnv',
     )
 
 def make_env(env_id, rank, seed=0):
@@ -36,7 +36,9 @@ def make_env(env_id, rank, seed=0):
     return _init
 
 if __name__ == "__main__":
-
+    env = gym.make('Hopper2dEnv-v0')
+    obs = env.reset()
+    breakpoint()
     num_cpu = 6  # Number of processes to use
     env_id = 'Loco3dEnv-v0'
     checkpoint_callback = CheckpointCallback(

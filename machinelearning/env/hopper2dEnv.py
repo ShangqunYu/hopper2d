@@ -6,7 +6,7 @@ import gymnasium as gym
 from gymnasium import spaces
 from typing import Optional, Tuple, Union
 
-class Loco3dEnv(gym.Env):
+class Hopper2dEnv(gym.Env):
     def __init__(self):
         self.w = Hopper2dWrapper()
         act_lowbd = np.ones(3,dtype=np.float32)  * -3
@@ -19,7 +19,7 @@ class Loco3dEnv(gym.Env):
 
 
     def step(self, action):
-        obs = self.w.step(rdts, ldts, rxs, lxs)
+        obs = self.w.step(action)
         # force the output for rdts and ldts to be close to 1
         reward = 1
         # reward = output[31] - 0.5* np.sum(np.square(rdts - np.ones(4))) - 0.5* np.sum(np.square(ldts - np.ones(4)))
@@ -29,10 +29,9 @@ class Loco3dEnv(gym.Env):
 
     def reset(self, *,seed: Optional[int] = None, options: Optional[dict] = None,):
         super().reset(seed=seed)
-        output = self.w.reset()
-        state = output[:31]
+        obs = self.w.reset()
         info = {}
-        return state, info
+        return obs, info
 
     def render(self, mode='human'):
         self.w.render()

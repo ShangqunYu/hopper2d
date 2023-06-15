@@ -18,11 +18,21 @@ VectorXd Hopper2dEnv::reset(){
 }
 
 VectorXd Hopper2dEnv::step(VectorXd actions){
+    // compute torques based on actions with pd control
     vector<double> torques = compute_torques(actions);
+    cout<<"torques: "<<torques[0]<<" "<<torques[1]<<" "<<torques[2]<<endl;
+    // compute dz based on dynamics
     Eigen::VectorXd dz = dynamics(state, parameter, torques);
+    cout<<"dz: "<<dz<<endl;
+    // update state
     Eigen::VectorXd nexts = state + dz * p.dt;
-    nexts.segment(p.dim/2, p.dim/2) = nexts.segment(0, p.dim/2) + discrete_contact_dynamics(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
+    cout<<"nexts: "<<nexts<<endl;
+    // compute collision, update velocity
+    nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
+    cout<<"nexts: "<<nexts<<endl;
+    // update position based on the corrected velocity after contact with old position
     nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
+    cout<<"nexts: "<<nexts<<endl;
     state = nexts;
     return state;
 }
