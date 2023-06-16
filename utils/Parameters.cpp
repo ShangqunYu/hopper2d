@@ -15,8 +15,8 @@ Parameters::Parameters()
 
     ground_height = 0;
         
-    rest_coeff = 0.2; 
-    fric_coeff = 0.7;
+    rest_coeff = 0; 
+    fric_coeff = 0.8;
     dt = 0.001;
     dim = 12;
     // declare a 12 dim eigen vector
@@ -25,11 +25,11 @@ Parameters::Parameters()
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
     kp = 100;
-    kd = 0.8;
+    kd = 10;
 
     max_torque << 40, 40, 40;
 
-    terminal_height = 0.48;
+    terminal_height = -11110;
 
     max_steps = 10000;
 };

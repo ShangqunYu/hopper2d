@@ -15,6 +15,7 @@ done = False
 count = 0
 while not done:
      act, _ = model.predict(obs, deterministic=True)
+     act = np.array([0.0, 0.0, 0.0])
      obs, reward, done, _, info = env.step(act)
      env.render()
      count += 1

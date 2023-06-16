@@ -17,6 +17,7 @@ Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<doub
 
 
 Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, double rest_coeff, double fric_coeff, double ground_height);
+Eigen::VectorXd discrete_contact_dynamics_new(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, double rest_coeff, double fric_coeff, double ground_height);
 
 Eigen::MatrixXd get_A_matrix (const double z_vecp[12], const double paramp[17]);
 Eigen::MatrixXd get_b_matrix (const double z_vecp[12], const double tausp[3], const double paramp[17]);

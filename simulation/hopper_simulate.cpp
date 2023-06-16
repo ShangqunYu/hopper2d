@@ -193,7 +193,7 @@ void hopper_simulate(){
         
         Eigen::VectorXd dz = dynamics(cur_z, parameter, taus);
         z_out.block(0,i+1,dim,1) = cur_z + dz * sim_dt;
-        z_out.block(dim/2,i+1,dim/2,1)= discrete_contact_dynamics(z_out.block(0,i+1,dim,1), parameter, rest_coeff, fric_coeff, ground_height);
+        z_out.block(dim/2,i+1,dim/2,1)= discrete_contact_dynamics_new(z_out.block(0,i+1,dim,1), parameter, rest_coeff, fric_coeff, ground_height);
         z_out.block(0,i+1,dim/2,1) = z_out.block(0,i,dim/2,1) + z_out.block(dim/2,i+1,dim/2,1) * sim_dt;
 
     }

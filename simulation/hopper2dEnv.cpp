@@ -26,7 +26,7 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
     // update state
     Eigen::VectorXd nexts = state + dz * p.dt;
     // compute collision, update velocity
-    nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
+    nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
     // update position based on the corrected velocity after contact with old position
     nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
     state = nexts;
@@ -43,8 +43,9 @@ double Hopper2dEnv::calc_reward(){
 
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2)));
     double height_reward = exp(- (state(1) - p.init_state(1)) * (state(1) - p.init_state(1)));
+    double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0)));
 
-    reward = reward + torques_reward + height_reward + angle_reward;
+    reward = reward + torques_reward + height_reward + angle_reward + position_reward;
 
     return reward;
 }
@@ -62,8 +63,17 @@ bool Hopper2dEnv::is_done(){
 vector<double> Hopper2dEnv::compute_torques(VectorXd actions){
     // implement pd control
     VectorXd t = VectorXd::Zero(3);
+
+    // double amp(0.25);
+    // double freq(2.5);
+    // double des_pos = amp * sin(2 * M_PI * freq * num_steps * p.dt);
+    // double des_vel = amp * 2 * M_PI * freq * cos(2 * M_PI * freq * num_steps * p.dt);
+
+    // t[0] = p.kp * (p.init_state[3] + des_pos - state[3]) + p.kd * (des_vel - state[9]);
+    // t[1] = p.kp * (p.init_state[4] - 2*des_pos - state[4]) + p.kd * (-2*des_vel - state[10]);
+    // t[2] = p.kp * (p.init_state[5] + des_pos - state[5]) + p.kd * (des_vel - state[11]);
+
     t = p.kp * (p.init_state.segment(3,3) + actions - state.segment(3, 3)) - p.kd * state.segment(9, 3);
-    
     // clip torques
     for(int i = 0; i < 3; i++){
         if(t[i] > p.max_torque[i]){
