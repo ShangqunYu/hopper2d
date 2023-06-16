@@ -22,12 +22,18 @@ class Hopper2dWrapper {
         
         void render() {
             env.render();
-            cout<<"Hopper2dWrapper render"<<endl;
         }
-
 
         VectorXd reset(){
             return env.reset();
+        }
+
+        double calc_reward(){
+            return env.calc_reward();
+        }
+
+        bool is_done(){
+            return env.is_done();
         }
 
         Hopper2dEnv env;
@@ -39,6 +45,8 @@ PYBIND11_MODULE(hopper2dWrapper, m) {
         .def(py::init<>())
         .def("step", &Hopper2dWrapper::step)
         .def("render", &Hopper2dWrapper::render)
-        .def("reset", &Hopper2dWrapper::reset);
+        .def("reset", &Hopper2dWrapper::reset)
+        .def("calc_reward", &Hopper2dWrapper::calc_reward)
+        .def("is_done", &Hopper2dWrapper::is_done);
 
 }

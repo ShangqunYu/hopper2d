@@ -26,4 +26,10 @@ Parameters::Parameters()
 
     kp = 100;
     kd = 0.8;
+
+    max_torque << 40, 40, 40;
+
+    terminal_height = 0.48;
+
+    max_steps = 10000;
 };

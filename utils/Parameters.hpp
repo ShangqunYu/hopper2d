@@ -28,5 +28,9 @@ class Parameters {
 
         double kp, kd;
 
+        Vector3d max_torque;
 
+        double terminal_height;
+
+        int max_steps;
 };

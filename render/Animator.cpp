@@ -14,8 +14,6 @@ Animator::Animator(vector<double> p):
 {
     _ini_state.setZero();
     _cur_state = _ini_state;
-    cout<<"animator loaded" << "l0"<<l0 << "l1"<<l1<< "l2"<<l2<<endl;
-    cout<<lbody<<endl;
 }
 
 

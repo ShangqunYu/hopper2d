@@ -36,35 +36,31 @@ def make_env(env_id, rank, seed=0):
     return _init
 
 if __name__ == "__main__":
-    env = gym.make('Hopper2dEnv-v0')
-    obs = env.reset()
-    count = 0
-    while True:
-        action = np.array([0.0, 0.0, 0.0])
-        env.step(action)
-        env.render()
-        breakpoint()
-        count += 1
-        if count > 1000:
-            break
-    breakpoint()
-    num_cpu = 6  # Number of processes to use
-    env_id = 'Loco3dEnv-v0'
+    # env = gym.make('Hopper2dEnv-v0')
+    # obs = env.reset()
+    # breakpoint()
+    # count = 0
+    # while True:
+    #     action = np.array([0.0, 0.0, 0.0])
+    #     env.step(action)
+    #     env.render()
+    #     count += 1
+    #     if count > 1000:
+    #         break
+
+
+    num_cpu = 8  # Number of processes to use
+    env = SubprocVecEnv([make_env('Hopper2dEnv-v0', i) for i in range(num_cpu)])
+
     checkpoint_callback = CheckpointCallback(
-      save_freq=10000,
-      save_path="./logs/",
-      name_prefix="rl_model"
+      save_freq=50000,
+      save_path="./logs/model/hopper2dJun15",
+      name_prefix="NoAuxPenalty"
     )
-    # vec_env = make_vec_env('Loco3dEnv-v0', n_envs=num_cpu, vec_env_cls = SubprocVecEnv())
-    envs = [make_env(env_id, i + num_cpu) for i in range(num_cpu)]
-    train_env = SubprocVecEnv(envs
-        ,
-        start_method="forkserver",
-    )
-    train_env = VecMonitor(train_env)
 
+    env = VecMonitor(env)
 
-    # vec_env = VecMonitor(vec_env)
-    model = PPO("MlpPolicy", train_env, verbose=1, tensorboard_log="./loco3d_linear_vision/")
-    model.learn(total_timesteps=5000000)
-    model.save("loco3d_linear_vision")
+    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./logs/hopper2dJun15")
+
+    model.learn(total_timesteps=3000000, callback=[checkpoint_callback])
+    model.save("./logs/model/hopper2dJun15/model")

@@ -1,21 +1,23 @@
 import gymnasium as gym
-from env.loco3dEnv import Loco3dEnv
+from env.hopper2dEnv import Hopper2dEnv
 import numpy as np
 from stable_baselines3 import PPO
 
 gym.envs.register(
-     id='Loco3dEnv-v0',
-     entry_point='env:Loco3dEnv',
+     id='Hopper2dEnv-v0',
+     entry_point='env:Hopper2dEnv',
 )
-env = gym.make('Loco3dEnv-v0')
+env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
 
-model = PPO.load("./logs/model/loco3d_cont_june6/loco3d__800000_steps", print_system_info=True)
+model = PPO.load("./logs/model/hopper2dJun15/NoAuxPenalty_1200000_steps.zip", print_system_info=True)
 done = False
+count = 0
 while not done:
-     breakpoint()
      act, _ = model.predict(obs, deterministic=True)
      obs, reward, done, _, info = env.step(act)
      env.render()
+     count += 1
+     print(count)
 
 
