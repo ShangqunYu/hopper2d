@@ -152,9 +152,39 @@ Eigen::VectorXd discrete_contact_dynamics_new(const Eigen::Ref<const Eigen::Matr
     //taking the inverse of A matrix
     Eigen::MatrixXd A_matrix_inv = A_matrix.inverse();
     vector<int> contact_pts;
+    vector<Eigen::VectorXd> contact_pts_vel;
+    vector<double> contact_pts_post_vel_y;
+    vector<Eigen::MatrixXd> contact_pts_jacobian;
+    vector<Eigen::MatrixXd> contact_pts_jacobian_y;
+    vector<Eigen::MatrixXd> contact_pts_jacobian_x;
+    vector<double> contact_pts_lambda_y;
+    vector<double> contact_pts_lambda_x;
     for (int k = 0; k < num_contact_pts; k++){
         if(pose_contact_matrix(1,k)-ground_height<0){
             contact_pts.push_back(k);
+            Eigen::VectorXd pt_vel = vel_contact_matrix(Eigen::placeholders::all, k);
+            contact_pts_vel.push_back(pt_vel);
+
+            double post_vel_y = (pt_vel(1) < 0) ? -rest_coeff * pt_vel(1): pt_vel(1);
+            contact_pts_post_vel_y.push_back(post_vel_y);
+
+            double* J; J = new double [18];
+            jacobians(z_vecp, paramp, k, J);
+            Eigen::MatrixXd J_matrix = arrayToEigen(J, 3, 6);
+            contact_pts_jacobian.push_back(J_matrix);
+
+            Eigen::MatrixXd J_matrix_y = J_matrix(1, Eigen::placeholders::all);
+            contact_pts_jacobian_y.push_back(J_matrix_y);
+
+            Eigen::MatrixXd J_matrix_x = J_matrix(0, Eigen::placeholders::all);
+            contact_pts_jacobian_x.push_back(J_matrix_x);
+
+            double lambda_y = 1/(J_matrix_y * A_matrix_inv * J_matrix_y.transpose()).coeff(0,0);
+            contact_pts_lambda_y.push_back(lambda_y);
+
+            double lambda_x = 1/(J_matrix_x * A_matrix_inv * J_matrix_x.transpose()).coeff(0,0);
+            contact_pts_lambda_x.push_back(lambda_x);
+            delete J;
         }
     }
     // init as ones
@@ -172,43 +202,32 @@ Eigen::VectorXd discrete_contact_dynamics_new(const Eigen::Ref<const Eigen::Matr
         //cout << endl;
         for (int contact_idx = 0; contact_idx < contact_pts.size(); contact_idx++){
             
-            Eigen::VectorXd vB = vel_contact_matrix(Eigen::placeholders::all, contact_pts[contact_idx]);
-            double* J; J = new double [18];
-            jacobians(z_vecp, paramp, contact_pts[contact_idx], J);
-            Eigen::MatrixXd J_matrix = arrayToEigen(J, 3, 6);
+            Eigen::VectorXd vB = contact_pts_vel[contact_idx];
+ 
+            Eigen::MatrixXd J_matrix = contact_pts_jacobian[contact_idx];
 
             //Vertical
-            Eigen::MatrixXd J_matrix_y = J_matrix(1, Eigen::placeholders::all);
-            double lambda_y = 1/(J_matrix_y * A_matrix_inv * J_matrix_y.transpose()).coeff(0,0);
+            Eigen::MatrixXd J_matrix_y = contact_pts_jacobian_y[contact_idx];
+            double lambda_y = contact_pts_lambda_y[contact_idx];
             
-            double vb_y_post = (vB(1) < 0) ? -rest_coeff * vB(1): vB(1);
-            dF_ys[contact_idx] =  lambda_y * (vb_y_post - (J_matrix_y * qdot)(0));  //using 0 to convert from 1x1 matrix to double
+            double vy_post = contact_pts_post_vel_y[contact_idx];
+            dF_ys[contact_idx] =  lambda_y * (vy_post - (J_matrix_y * qdot)(0));  //using 0 to convert from 1x1 matrix to double
             //having a cap, the overall force can't be negative
-            if (Fy(contact_pts[contact_idx]) + dF_ys[contact_idx]  < 0 ){
-                dF_ys[contact_idx]  = -Fy(contact_pts[contact_idx]);
-            }
-            Fy(contact_pts[contact_idx]) = Fy(contact_pts[contact_idx]) + dF_ys[contact_idx] ;
+            double next_Fy = max(0.0, Fy(contact_pts[contact_idx])+ dF_ys[contact_idx]);
+            dF_ys(contact_idx) = next_Fy - Fy(contact_pts[contact_idx]);
+            Fy(contact_pts[contact_idx]) = Fy(contact_pts[contact_idx]) + dF_ys[contact_idx];
             qdot = qdot + A_matrix_inv*J_matrix_y.transpose() * dF_ys[contact_idx];
 
             //Horizontal
-            Eigen::MatrixXd J_matrix_x = J_matrix(0, Eigen::placeholders::all);
-            double lambda_x = 1/(J_matrix_x * A_matrix_inv * J_matrix_x.transpose()).coeff(0,0);
-            double vb_x_post = 0;
-            dF_xs(contact_idx) =  lambda_x * (vb_x_post - (J_matrix_x * qdot)(0));  //using 0 to convert from 1x1 matrix to double
+            Eigen::MatrixXd J_matrix_x = contact_pts_jacobian_x[contact_idx];
+            double lambda_x = contact_pts_lambda_x[contact_idx];
+            double vx_post = 0;
+            dF_xs(contact_idx) =  lambda_x * (vx_post - (J_matrix_x * qdot)(0));  //using 0 to convert from 1x1 matrix to double
             //check if the overall tengential force is outside of the friction cone
-            if ( abs(Fx(contact_pts[contact_idx])+ dF_xs(contact_idx)) > fric_coeff * Fy(contact_pts[contact_idx])  ){
-                //getting the sign of the horizontal force
-                int sign = ((Fx(contact_pts[contact_idx])+ dF_xs(contact_idx))>0) - ((Fx(contact_pts[contact_idx])+ dF_xs(contact_idx))<0);
-                dF_xs(contact_idx) = sign * Fy(contact_pts[contact_idx]) * fric_coeff - Fx(contact_pts[contact_idx]);
-            }
+            double next_Fx = max (-fric_coeff * Fy(contact_pts[contact_idx]), min(fric_coeff * Fy(contact_pts[contact_idx]), Fx(contact_pts[contact_idx])+ dF_xs(contact_idx)));
+            dF_xs(contact_idx) = next_Fx - Fx(contact_pts[contact_idx]);
             Fx(contact_pts[contact_idx]) = Fx(contact_pts[contact_idx]) + dF_xs(contact_idx);
             qdot = qdot + A_matrix_inv*J_matrix_x.transpose() * dF_xs(contact_idx);
-            Eigen::MatrixXd temp_z = z;
-            temp_z.block(dim/2,0,dim/2,1) = qdot;
-            vector<double> temp_zvec(temp_z.data(), temp_z.data() + temp_z.rows() * temp_z.cols());
-            double* tempz_vecp = &temp_zvec[0];
-            velocity_contact_points(tempz_vecp, paramp, contact_point_vel); 
-            delete J;
         }
     }
     delete contact_point_pose; delete contact_point_vel;
