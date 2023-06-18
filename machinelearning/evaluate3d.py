@@ -10,12 +10,12 @@ gym.envs.register(
 env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
 
-model = PPO.load("./logs/model/hopper2dJun15/NoAuxPenalty_1200000_steps.zip", print_system_info=True)
+model = PPO.load("./logs/model/hopper2dJun17/NoAuxPenalty_1600000_steps.zip", print_system_info=True)
 done = False
 count = 0
 while not done:
      act, _ = model.predict(obs, deterministic=True)
-     act = np.array([0.0, 0.0, 0.0])
+     # act = np.array([0.0, 0.0, 0.0])
      obs, reward, done, _, info = env.step(act)
      env.render()
      count += 1

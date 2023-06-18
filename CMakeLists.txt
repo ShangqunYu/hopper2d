@@ -6,7 +6,7 @@ project(hopper2d VERSION 1.0)
 add_subdirectory(machinelearning/pybind11)
 set(CMAKE_CXX_FLAGS "-fPIC")
 
-find_package(Python 3.10.11 COMPONENTS Interpreter Development REQUIRED)
+# find_package(Python 3.10.11 COMPONENTS Interpreter Development REQUIRED)
 
 # eigen
 include_directories("/usr/local/include/eigen3/")
