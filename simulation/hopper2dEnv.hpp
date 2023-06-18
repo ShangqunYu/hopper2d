@@ -18,7 +18,8 @@ class Hopper2dEnv{
         Animator animator;
         VectorXd step(VectorXd actions);
         vector<double> torques;
-        double calc_reward();
+        double calc_stand_reward();
+        double calc_jump_reward();
         VectorXd reset();
         void render();
         void initstate();

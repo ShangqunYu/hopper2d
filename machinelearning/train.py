@@ -54,13 +54,13 @@ if __name__ == "__main__":
 
     checkpoint_callback = CheckpointCallback(
       save_freq=50000,
-      save_path="./logs/model/hopper2dJun17",
-      name_prefix="NoAuxPenalty"
+      save_path="./logs/model/jumpJun18",
+      name_prefix="jump"
     )
 
     env = VecMonitor(env)
 
-    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./logs/hopper2dJun17")
+    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./logs/jumpJun18")
 
     model.learn(total_timesteps=3000000, callback=[checkpoint_callback])
-    model.save("./logs/model/hopper2dJun17/model")
+    model.save("./logs/model/jumpJun18/model")

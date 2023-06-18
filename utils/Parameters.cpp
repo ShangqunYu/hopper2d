@@ -29,7 +29,7 @@ Parameters::Parameters()
 
     max_torque << 40, 40, 40;
 
-    terminal_height = 0.48;
+    terminal_height = 0.3;
 
     max_steps = 10000;
 };

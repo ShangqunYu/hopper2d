@@ -34,7 +34,7 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
     return state;
 }
 
-double Hopper2dEnv::calc_reward(){
+double Hopper2dEnv::calc_stand_reward(){
     //basic reward is 1
     double reward = 0;
     // cost from torques
@@ -46,6 +46,23 @@ double Hopper2dEnv::calc_reward(){
     double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0)));
 
     reward = reward + torques_reward + height_reward + angle_reward + position_reward;
+
+    return reward;
+}
+
+double Hopper2dEnv::calc_jump_reward(){
+    //basic reward is 1
+    double reward = 0;
+    // cost from torques
+    double torques_reward= -0.0001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
+    // cost from height
+
+    double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.01;
+    double height_reward = state(1);
+    double jump_reward = (state(1) > 0.7) ? state(1) : 0;
+    double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
+
+    reward = reward + torques_reward + height_reward + angle_reward + position_reward + jump_reward * 10;
 
     return reward;
 }
