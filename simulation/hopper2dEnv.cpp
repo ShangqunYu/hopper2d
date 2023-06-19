@@ -29,6 +29,8 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
     nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
     // update position based on the corrected velocity after contact with old position
     nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
+
+    prev_height = state(1);
     state = nexts;
     num_steps += 1;
     return state;
@@ -54,15 +56,14 @@ double Hopper2dEnv::calc_jump_reward(){
     //basic reward is 1
     double reward = 0;
     // cost from torques
-    double torques_reward= -0.0001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
+    double torques_reward= -0.00001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
     // cost from height
 
-    double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.01;
-    double height_reward = state(1);
-    double jump_reward = (state(1) > 0.7) ? state(1) : 0;
+    double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
     double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
-
-    reward = reward + torques_reward + height_reward + angle_reward + position_reward + jump_reward * 10;
+    double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
+    double jump_bonus = (state(1)>0.7) ? state(1) : 0;
+    reward = reward + torques_reward + angle_reward + position_reward + jump_reward * 10 + jump_bonus * 10;
 
     return reward;
 }
@@ -100,7 +101,6 @@ vector<double> Hopper2dEnv::compute_torques(VectorXd actions){
             t[i] = -p.max_torque[i];
         }
     }
-
 
 
     return {t[0], t[1], t[2]};

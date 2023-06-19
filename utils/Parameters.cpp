@@ -24,10 +24,10 @@ Parameters::Parameters()
     init_state << 0.0, 1, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
-    kp = 100;
-    kd = 10;
+    kp = 10;
+    kd = 1;
 
-    max_torque << 40, 40, 40;
+    max_torque << 80, 80, 80;
 
     terminal_height = 0.3;
 
