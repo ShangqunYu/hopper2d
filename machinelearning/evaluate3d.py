@@ -10,16 +10,18 @@ gym.envs.register(
 env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
 
-model = PPO.load("./logs/model/jumpJun18/model.zip", print_system_info=True)
+model = PPO.load("./logs/model/standJun20/model.zip", print_system_info=True)
 done = False
 count = 0
 while not done:
+     # breakpoint()
      act, _ = model.predict(obs, deterministic=True)
      # act = np.array([0.0, 0.0, 0.0])
-     # print(act)
+     # print(obs)
      obs, reward, done, _, info = env.step(act)
+     
      env.render()
      count += 1
-     # print(count)
+     print(count)
 print(count)
 

@@ -19,22 +19,21 @@ VectorXd Hopper2dEnv::reset(){
 }
 
 VectorXd Hopper2dEnv::step(VectorXd actions){
-    // compute torques based on actions with pd control
-    torques = compute_torques(actions);
-    // compute dz based on dynamics
-    Eigen::VectorXd dz = rk4(state, parameter, torques, p.dt);
-
-    // Eigen::VectorXd dz = dynamics(state, parameter, torques);
-    // update state
-    Eigen::VectorXd nexts = state + dz * p.dt;
-    // compute collision, update velocity
-    nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
-    // update position based on the corrected velocity after contact with old position
-    nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
-
     prev_height = state(1);
-    state = nexts;
+    for (int i = 0; i < p.time_skipping; i++){
+        forward(actions);
+    }
     num_steps += 1;
+    return state;
+}
+
+VectorXd Hopper2dEnv::forward(VectorXd actions){
+    torques = compute_torques(actions);
+    Eigen::VectorXd dz = rk4(state, parameter, torques, p.dt);
+    Eigen::VectorXd nexts = state + dz * p.dt;
+    nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
+    nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
+    state = nexts;
     return state;
 }
 
@@ -42,15 +41,13 @@ double Hopper2dEnv::calc_stand_reward(){
     //basic reward is 1
     double reward = 0;
     // cost from torques
-    double torques_reward= -0.0001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
+    double torques_reward= -0.000001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
     // cost from height
 
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2)));
     double height_reward = exp(- (state(1) - p.init_state(1)) * (state(1) - p.init_state(1)));
     double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0)));
-
     reward = reward + torques_reward + height_reward + angle_reward + position_reward;
-
     return reward;
 }
 
@@ -62,16 +59,21 @@ double Hopper2dEnv::calc_jump_reward(){
     // cost from height
 
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
+    // cout<<"angle_reward: "<<angle_reward<<endl;
     double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
+    // cout<<"position_reward: "<<position_reward<<endl;
     double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
+    // cout<<"jump_reward: "<<jump_reward<<endl;
     double jump_bonus = (state(1)>0.7) ? state(1)*state(1)  : 0;
+    // cout<<"jump_bonus: "<<jump_bonus<<endl;
+    double alive_bonus = 0.1;
     reward = reward + torques_reward + angle_reward + position_reward + jump_reward * 10 + jump_bonus * 10;
 
     return reward;
 }
 
 bool Hopper2dEnv::is_done(){
-    if(state(1) < p.terminal_height || num_steps > p.max_steps){
+    if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(0)) > p.init_state(0) + p.terminal_width || abs(state(2)) > p.init_state(2) + p.terminal_angle ){
         return true;
     }
     else{

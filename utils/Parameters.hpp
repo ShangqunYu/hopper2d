@@ -31,6 +31,9 @@ class Parameters {
         Vector3d max_torque;
 
         double terminal_height;
+        double terminal_width;
+        double terminal_angle;
 
         int max_steps;
+        int time_skipping;
 };

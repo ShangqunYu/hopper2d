@@ -17,7 +17,7 @@ Parameters::Parameters()
         
     rest_coeff = 0; 
     fric_coeff = 0.8;
-    dt = 0.005;
+    dt = 0.002;
     dim = 12;
     // declare a 12 dim eigen vector
     init_state = Eigen::VectorXd::Zero(dim);
@@ -29,7 +29,11 @@ Parameters::Parameters()
 
     max_torque << 80, 80, 80;
 
-    terminal_height = 0.3;
+    terminal_height = 0.48;
+    terminal_width = 0.1;
+    terminal_angle = 0.1;
 
-    max_steps = 10000;
+    max_steps = 5000;
+
+    time_skipping = 5;
 };
