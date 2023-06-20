@@ -17,7 +17,7 @@ Parameters::Parameters()
         
     rest_coeff = 0; 
     fric_coeff = 0.8;
-    dt = 0.001;
+    dt = 0.005;
     dim = 12;
     // declare a 12 dim eigen vector
     init_state = Eigen::VectorXd::Zero(dim);

@@ -22,7 +22,9 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
     // compute torques based on actions with pd control
     torques = compute_torques(actions);
     // compute dz based on dynamics
-    Eigen::VectorXd dz = dynamics(state, parameter, torques);
+    Eigen::VectorXd dz = rk4(state, parameter, torques, p.dt);
+
+    // Eigen::VectorXd dz = dynamics(state, parameter, torques);
     // update state
     Eigen::VectorXd nexts = state + dz * p.dt;
     // compute collision, update velocity
@@ -62,7 +64,7 @@ double Hopper2dEnv::calc_jump_reward(){
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
     double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
     double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
-    double jump_bonus = (state(1)>0.7) ? state(1) : 0;
+    double jump_bonus = (state(1)>0.7) ? state(1)*state(1)  : 0;
     reward = reward + torques_reward + angle_reward + position_reward + jump_reward * 10 + jump_bonus * 10;
 
     return reward;

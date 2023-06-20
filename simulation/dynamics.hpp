@@ -21,3 +21,5 @@ Eigen::VectorXd discrete_contact_dynamics_new(const Eigen::Ref<const Eigen::Matr
 
 Eigen::MatrixXd get_A_matrix (const double z_vecp[12], const double paramp[17]);
 Eigen::MatrixXd get_b_matrix (const double z_vecp[12], const double tausp[3], const double paramp[17]);
+
+Eigen::VectorXd rk4(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus, double dt);

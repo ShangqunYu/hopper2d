@@ -16,9 +16,6 @@ Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<doub
     //getting B matrix
     Eigen::MatrixXd b_matrix = get_b_matrix(z_vecp, tausp, paramp);
  
-    //cout<<A_matrix<<endl;
-    
-
     //taking the inverse of A matrix
     Eigen::MatrixXd A_matrix_inv = A_matrix.inverse();
 
@@ -34,6 +31,18 @@ Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<doub
 
     return dz;
 }
+
+// runge kutta method
+Eigen::VectorXd rk4(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus, double dt){
+    Eigen::VectorXd k1 = dynamics(z, p, taus);
+    Eigen::VectorXd k2 = dynamics(z + dt/2*k1, p, taus);
+    Eigen::VectorXd k3 = dynamics(z + dt/2*k2, p, taus);
+    Eigen::VectorXd k4 = dynamics(z + dt*k3, p, taus);
+    Eigen::VectorXd dz = dt/6*(k1 + 2*k2 + 2*k3 + k4);
+    
+    return dz;
+}
+
 
 
 Eigen::VectorXd discrete_contact_dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, double rest_coeff, double fric_coeff, double ground_height){
