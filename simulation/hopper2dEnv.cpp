@@ -29,8 +29,10 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
 
 VectorXd Hopper2dEnv::forward(VectorXd actions){
     torques = compute_torques(actions);
-    Eigen::VectorXd dz = rk4(state, parameter, torques, p.dt);
-    Eigen::VectorXd nexts = state + dz * p.dt;
+    // Eigen::VectorXd dz = dynamics(state, parameter, torques);
+    // Eigen::VectorXd nexts = state + dz * p.dt;
+    Eigen::VectorXd nexts = rk4(state, parameter, torques, p.dt);
+    
     nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
     nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
     state = nexts;
@@ -74,7 +76,7 @@ double Hopper2dEnv::calc_jump_reward(){
 
 bool Hopper2dEnv::is_done(){
     // if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(0)) > p.init_state(0) + p.terminal_width || abs(state(2)) > p.init_state(2) + p.terminal_angle ){
-    if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(2)) > p.terminal_angle || abs(state(8)) > 2 ){
+    if(state(1) < p.terminal_height || num_steps > p.max_steps ){
         return true;
     }
     else{
