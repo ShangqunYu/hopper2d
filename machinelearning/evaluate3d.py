@@ -10,7 +10,7 @@ gym.envs.register(
 env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
 
-model = PPO.load("./logs/model/standJun20/model.zip", print_system_info=True)
+model = PPO.load("./logs/model/jumpJun21/jump_2000000_steps.zip", print_system_info=True)
 done = False
 count = 0
 while not done:
@@ -22,6 +22,6 @@ while not done:
      
      env.render()
      count += 1
-     print(count)
+     print(count, reward)
 print(count)
 

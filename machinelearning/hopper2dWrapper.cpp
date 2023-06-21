@@ -29,7 +29,7 @@ class Hopper2dWrapper {
         }
 
         double calc_reward(){
-            return env.calc_stand_reward();
+            return env.calc_jump_reward();
         }
 
         bool is_done(){

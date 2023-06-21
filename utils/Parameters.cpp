@@ -29,7 +29,7 @@ Parameters::Parameters()
 
     max_torque << 80, 80, 80;
 
-    terminal_height = 0.48;
+    terminal_height = 0.28;
     terminal_width = 0.1;
     terminal_angle = 0.1;
 
