@@ -38,7 +38,7 @@ Eigen::VectorXd rk4(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &
     Eigen::VectorXd k2 = dynamics(z + dt/2*k1, p, taus);
     Eigen::VectorXd k3 = dynamics(z + dt/2*k2, p, taus);
     Eigen::VectorXd k4 = dynamics(z + dt*k3, p, taus);
-    Eigen::VectorXd dz = dt/6*(k1 + 2*k2 + 2*k3 + k4);
+    Eigen::VectorXd dz = 1/6*(k1 + 2*k2 + 2*k3 + k4);
 
     //return next state
     return z + dz;    
@@ -211,9 +211,7 @@ Eigen::VectorXd discrete_contact_dynamics_new(const Eigen::Ref<const Eigen::Matr
 
         //cout << endl;
         for (int contact_idx = 0; contact_idx < contact_pts.size(); contact_idx++){
-            
-            Eigen::VectorXd vB = contact_pts_vel[contact_idx];
- 
+             
             Eigen::MatrixXd J_matrix = contact_pts_jacobian[contact_idx];
 
             //Vertical

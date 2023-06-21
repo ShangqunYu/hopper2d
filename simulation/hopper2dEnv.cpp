@@ -29,9 +29,12 @@ VectorXd Hopper2dEnv::step(VectorXd actions){
 
 VectorXd Hopper2dEnv::forward(VectorXd actions){
     torques = compute_torques(actions);
-    // Eigen::VectorXd dz = dynamics(state, parameter, torques);
-    // Eigen::VectorXd nexts = state + dz * p.dt;
-    Eigen::VectorXd nexts = rk4(state, parameter, torques, p.dt);
+    Eigen::VectorXd dz = dynamics(state, parameter, torques);
+
+    // use non-updated state with updated veclotiy
+    Eigen::VectorXd nexts = state;
+    nexts.tail(p.dim/2) = state.tail(p.dim/2) + dz.tail(p.dim/2) * p.dt;
+    // Eigen::VectorXd nexts = rk4(state, parameter, torques, p.dt);
     
     nexts.segment(p.dim/2, p.dim/2) = discrete_contact_dynamics_new(nexts, parameter, p.rest_coeff, p.fric_coeff, p.ground_height);
     nexts.segment(0, p.dim/2) = state.segment(0, p.dim/2) + nexts.segment(p.dim/2, p.dim/2) * p.dt;
