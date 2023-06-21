@@ -67,14 +67,14 @@ double Hopper2dEnv::calc_jump_reward(){
     double jump_bonus = (state(1)>0.7) ? state(1)*state(1)  : 0;
     // cout<<"jump_bonus: "<<jump_bonus<<endl;
     double alive_bonus = 0.02;
-    reward = reward + torques_reward + angle_reward + position_reward + jump_reward * 20 + jump_bonus * 10 + alive_bonus;
+    reward = reward + torques_reward + angle_reward + position_reward + jump_reward * 50 + jump_bonus * 4 + alive_bonus;
 
     return reward;
 }
 
 bool Hopper2dEnv::is_done(){
     // if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(0)) > p.init_state(0) + p.terminal_width || abs(state(2)) > p.init_state(2) + p.terminal_angle ){
-    if(state(1) < p.terminal_height || num_steps > p.max_steps ){
+    if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(2)) > p.terminal_angle || abs(state(8)) > 2 ){
         return true;
     }
     else{
