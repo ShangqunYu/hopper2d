@@ -4,7 +4,7 @@ using namespace casadi;
 
 Eigen::VectorXd dynamics(const Eigen::Ref<const Eigen::MatrixXd>& z, vector<double> &p, vector<double> &taus){
     
-    cout<<"torques: "<<taus[0]<<", "<<taus[1]<<", "<<taus[2]<<endl;
+    // cout<<"torques: "<<taus[0]<<", "<<taus[1]<<", "<<taus[2]<<endl;
     vector<double> z_vec(z.data(), z.data() + z.rows() * z.cols());    
     double* z_vecp = &z_vec[0];
     double* paramp = &p[0];

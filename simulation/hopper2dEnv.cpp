@@ -76,7 +76,7 @@ double Hopper2dEnv::calc_jump_reward(){
 
 bool Hopper2dEnv::is_done(){
     // if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(0)) > p.init_state(0) + p.terminal_width || abs(state(2)) > p.init_state(2) + p.terminal_angle ){
-    if(state(1) < p.terminal_height || num_steps > p.max_steps ){
+    if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(2)) >p.terminal_angle ){
         return true;
     }
     else{
