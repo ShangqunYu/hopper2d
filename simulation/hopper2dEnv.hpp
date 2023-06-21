@@ -26,6 +26,7 @@ class Hopper2dEnv{
         void initstate();
         vector<double> compute_torques(VectorXd actions);
         bool is_done();
+        double prev_x;
         double prev_height;
 
 };

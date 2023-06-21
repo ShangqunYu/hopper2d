@@ -9,22 +9,25 @@ gym.envs.register(
 )
 env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
-# breakpoint()
-model = PPO.load("./logs/model/jumpJun21/jump_400000_steps.zip", print_system_info=True)
+breakpoint()
+model = PPO.load("./logs/model/jumpJun21/model.zip", print_system_info=True)
 done = False
 count = 0
+totalReward = 0
 while not done:
      # breakpoint()
      act, _ = model.predict(obs, deterministic=True)
      # act = np.array([0.0, 0.0, 0.0])
-     if count > 166:
-          act = np.array([obs[3]-math.pi/6 , obs[4]+ math.pi/3, obs[5] - math.pi/6])
      obs, reward, done, _, info = env.step(act)
-     # print(obs)
+     theta1 = obs[3]
+     theta2 = obs[4]
+     theta3 = obs[5]
+     totalReward += reward
      env.render()
-     # print(obs)
-     # breakpoint()
+     print("theta1:", theta1/math.pi,"pi" , "theta2:", theta2/math.pi, "pi", "theta3:",theta3/math.pi, "pi")
+
      count += 1
      # print(count, reward)
 print(count)
+print(totalReward)
 

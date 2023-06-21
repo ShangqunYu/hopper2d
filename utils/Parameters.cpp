@@ -25,13 +25,15 @@ Parameters::Parameters()
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
     kp = 50;
-    kd = 1;
+    kd = 4 ;
 
     max_torque << 80, 80, 80;
 
     terminal_height = 0.28;
     terminal_width = 0.1;
-    terminal_angle = 1.5;
+    terminal_angle = M_PI / 6;
+    terminal_thetas = M_PI / 2;
+    healthy_state_range = 100;
 
     max_steps = 5000;
 

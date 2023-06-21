@@ -13,11 +13,7 @@ class Hopper2dEnv(gym.Env):
         act_lowbd = np.ones(3,dtype=np.float32)  * -5
         act_highbd = np.ones(3,dtype=np.float32) *  5
         self.action_space = spaces.Box(low=act_lowbd, high=act_highbd, dtype=np.float32)
-       
-        obs_lowbd  = np.ones(12,dtype=np.float32)  * -10
-        obs_highbd = np.ones(12,dtype=np.float32)  *  10
-        self.observation_space = spaces.Box(low=obs_lowbd , high=obs_highbd, dtype=np.float64)
-        self.target_height = 0.2*math.cos(math.pi/6) + 0.22*math.cos(math.pi/6-math.pi/3) + 0 + 0.3/2
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(11,), dtype=np.float64)
 
 
     def step(self, action):

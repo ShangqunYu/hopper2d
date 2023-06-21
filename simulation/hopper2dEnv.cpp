@@ -9,22 +9,22 @@ Hopper2dEnv::Hopper2dEnv() : animator(parameter)
 
 void Hopper2dEnv::initstate(){
     state = p.init_state;
-
 }
 
 VectorXd Hopper2dEnv::reset(){
     num_steps = 0;
     state = p.init_state;
-    return state;
+    return state.tail(p.dim-1);
 }
 
 VectorXd Hopper2dEnv::step(VectorXd actions){
+    prev_x = state(0);
     prev_height = state(1);
     for (int i = 0; i < p.time_skipping; i++){
         forward(actions);
     }
     num_steps += 1;
-    return state;
+    return state.tail(p.dim-1);
 }
 
 VectorXd Hopper2dEnv::forward(VectorXd actions){
@@ -65,7 +65,8 @@ double Hopper2dEnv::calc_jump_reward(){
 
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
     // cout<<"angle_reward: "<<angle_reward<<endl;
-    double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
+    // double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
+    double position_reward = (state(1) > prev_x) ? state(1)-prev_x : 0;
     // cout<<"position_reward: "<<position_reward<<endl;
     double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
     // cout<<"jump_reward: "<<jump_reward<<endl;
@@ -82,9 +83,18 @@ bool Hopper2dEnv::is_done(){
     if(state(1) < p.terminal_height || num_steps > p.max_steps || abs(state(2)) >p.terminal_angle ){
         return true;
     }
-    else{
-        return false;
+
+    if (abs(state(3))> p.terminal_thetas || abs(state(4))> p.terminal_thetas || abs(state(5))> p.terminal_thetas){
+        return true;
     }
+
+    for (int i = 0; i < p.dim; i++){
+        if (abs(state[i]) >= p.healthy_state_range){
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
