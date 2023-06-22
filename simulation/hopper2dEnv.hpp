@@ -1,7 +1,7 @@
 #include "../utils/Parameters.hpp"
 #include "dynamics.hpp"
 #include "../render/Animator.hpp"
-
+#include "../matlab_gen/position_contact_points.h"
 #include <Eigen/Core>
 
 using namespace std;
