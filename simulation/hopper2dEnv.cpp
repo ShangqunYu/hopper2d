@@ -66,7 +66,7 @@ double Hopper2dEnv::calc_jump_reward(){
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
     // cout<<"angle_reward: "<<angle_reward<<endl;
     // double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
-    double position_reward = (state(1) > prev_x) ? state(1)-prev_x : 0;
+    double position_reward = (state(0) > prev_x) ? state(0)-prev_x : 0;
     // cout<<"position_reward: "<<position_reward<<endl;
     double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
     // cout<<"jump_reward: "<<jump_reward<<endl;

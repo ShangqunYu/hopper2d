@@ -48,19 +48,25 @@ if __name__ == "__main__":
     #     if count > 1000:
     #         break
 
-
+    LOG_PATH = "./logs/jumpJun22"
     num_cpu = 8  # Number of processes to use
     env = SubprocVecEnv([make_env('Hopper2dEnv-v0', i) for i in range(num_cpu)])
-
+    env = VecMonitor(env)
     checkpoint_callback = CheckpointCallback(
       save_freq=50000,
-      save_path="./logs/model/jumpJun21",
+      save_path=LOG_PATH,
       name_prefix="jump"
     )
 
-    env = VecMonitor(env)
+    eval_callback = EvalCallback(
+        env, 
+        best_model_save_path=LOG_PATH,
+        log_path=LOG_PATH,
+        eval_freq=10000,
+    )
 
-    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./logs/jumpJun21")
 
-    model.learn(total_timesteps=3000000, callback=[checkpoint_callback])
-    model.save("./logs/model/jumpJun21/model")
+    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
+
+    model.learn(total_timesteps=3000000, callback=[checkpoint_callback, eval_callback])
+    model.save(LOG_PATH + "/model")

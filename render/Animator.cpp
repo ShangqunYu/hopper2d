@@ -35,7 +35,7 @@ void Animator::render(Eigen::VectorXd z)
 {
     _cur_state = z;
     send_message();
-    usleep(3000);
+    usleep(10000);
 }
 
 

@@ -9,8 +9,7 @@ gym.envs.register(
 )
 env = gym.make('Hopper2dEnv-v0')
 obs,_ = env.reset()
-breakpoint()
-model = PPO.load("./logs/model/jumpJun21/model.zip", print_system_info=True)
+model = PPO.load("./logs/jumpJun22/best_model.zip", print_system_info=True)
 done = False
 count = 0
 totalReward = 0
