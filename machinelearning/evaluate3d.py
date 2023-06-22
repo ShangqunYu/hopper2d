@@ -14,13 +14,13 @@ done = False
 count = 0
 totalReward = 0
 while not done:
-     # breakpoint()
+     breakpoint()
      act, _ = model.predict(obs, deterministic=True)
      # act = np.array([0.0, 0.0, 0.0])
      obs, reward, done, _, info = env.step(act)
-     theta1 = obs[3]
-     theta2 = obs[4]
-     theta3 = obs[5]
+     theta1 = obs[2]
+     theta2 = obs[3]
+     theta3 = obs[4]
      totalReward += reward
      env.render()
      print("theta1:", theta1/math.pi,"pi" , "theta2:", theta2/math.pi, "pi", "theta3:",theta3/math.pi, "pi")

@@ -33,7 +33,9 @@ class Parameters {
         double terminal_height;
         double terminal_width;
         double terminal_angle;
-        double terminal_thetas;
+        double terminal_theta1;
+        double terminal_theta2;
+        double terminal_theta3;
         double healthy_state_range;
 
         int max_steps;

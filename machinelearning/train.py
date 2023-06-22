@@ -49,11 +49,11 @@ if __name__ == "__main__":
     #         break
 
     LOG_PATH = "./logs/jumpJun22"
-    num_cpu = 8  # Number of processes to use
+    num_cpu = 12  # Number of processes to use
     env = SubprocVecEnv([make_env('Hopper2dEnv-v0', i) for i in range(num_cpu)])
     env = VecMonitor(env)
     checkpoint_callback = CheckpointCallback(
-      save_freq=50000,
+      save_freq=40000,
       save_path=LOG_PATH,
       name_prefix="jump"
     )

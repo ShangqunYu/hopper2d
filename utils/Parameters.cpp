@@ -2,14 +2,16 @@
 
 Parameters::Parameters() 
 {
-    mbody = 6; m0 = 0.3; m1 = 0.5; m2 = 0.1;  
+    mbody = 8; m0 = 2.7; m1 = 0.9; m2 = 0.3;  
     M = mbody + m0 + m1 + m2; // Total Mass
 
-    Ibody = 11 * pow(10,-3); I0 = 5.1 * pow(10,-6); I1 = 5.1 * pow(10,-6); I2 = 1.5 * pow(10,-6); // inertia
 
-    l0 = 0.2; l1 = 0.22; l2 = 0.1; l21 = 0.06; lbody = 0.3; // length of link
 
-    c0 = 0.1; c1 = 0.1;  c2 = 0.07; // length to center of mass
+    l0 = 0.35; l1 = 0.36; l2 = 0.1; l21 = 0.06; lbody = 0.3; // length of link
+
+
+    Ibody = mbody * lbody * lbody / 6; I0 = m0 * l0 * l0 / 12; I1 = m1 * l1 * l1 / 12; I2 = m2 * (l2 + l21) * (l2 + l21) / 12; // inertia
+    c0 = 0.13; c1 = 0.18;  c2 = 0.02; // length to center of mass
 
     gravity = 9.81; 
 
@@ -24,15 +26,17 @@ Parameters::Parameters()
     init_state << 0.0, 1, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
-    kp = 50;
-    kd = 4 ;
+    kp = 15;
+    kd = 1.5 ;
 
-    max_torque << 80, 80, 80;
+    max_torque << 70, 70, 70;
 
     terminal_height = 0.28;
     terminal_width = 0.1;
     terminal_angle = M_PI / 6;
-    terminal_thetas = M_PI / 2;
+    terminal_theta1 = M_PI / 2;
+    terminal_theta2 = 2 * M_PI / 3;
+    terminal_theta3 = M_PI / 2;
     healthy_state_range = 100;
 
     max_steps = 5000;
