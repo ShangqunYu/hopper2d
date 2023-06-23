@@ -63,7 +63,7 @@ double Hopper2dEnv::calc_jump_reward(){
     //basic reward is 1
     double reward = 0;
     // cost from torques
-    double torques_reward= -0.00001 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
+    double torques_reward= -0.00005 * (torques[0] * torques[0] + torques[1] * torques[1] + torques[2] * torques[2]);
     // cost from height
 
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;

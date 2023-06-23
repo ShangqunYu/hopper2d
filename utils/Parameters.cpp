@@ -31,7 +31,7 @@ Parameters::Parameters()
 
     max_torque << 70, 70, 70;
 
-    terminal_height = 0.28;
+    terminal_height = 0.5;
     terminal_width = 0.1;
     terminal_angle = M_PI / 6;
     terminal_theta1 = M_PI / 2;

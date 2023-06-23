@@ -68,5 +68,5 @@ if __name__ == "__main__":
 
     model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
 
-    model.learn(total_timesteps=3000000, callback=[checkpoint_callback, eval_callback])
+    model.learn(total_timesteps=5000000, callback=[checkpoint_callback, eval_callback])
     model.save(LOG_PATH + "/model")
