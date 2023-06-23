@@ -14,8 +14,8 @@ void Hopper2dEnv::initstate(){
 VectorXd Hopper2dEnv::reset(){
     num_steps = 0;
     state = p.init_state;
-    // add a random number between 0 to 1 to the initial height
-    state(1) += (double)rand()/RAND_MAX;
+    // add a random number between 0 to 0.3 to the initial height
+    state(1) += (double)rand()/RAND_MAX * 0.3;
     action_avg = VectorXd::Zero(3);
     return state.tail(p.dim-1);
 }
@@ -69,14 +69,14 @@ double Hopper2dEnv::calc_jump_reward(){
     double angle_reward = exp(- (state(2) - p.init_state(2)) * (state(2) - p.init_state(2))) * 0.1;
     // cout<<"angle_reward: "<<angle_reward<<endl;
     // double position_reward = exp(- (state(0) - p.init_state(0)) * (state(0) - p.init_state(0))) * 0.01;
-    double vel_reward = exp(-(1 - state(6)) * (1 - state(6)));
+    double vel_reward = exp(-(0.5 - state(6)) * (0.5 - state(6)) / (0.8*0.8)) / 0.8;
     // cout<<"position_reward: "<<position_reward<<endl;
     double jump_reward = (state(1) > prev_height) ? state(1)-prev_height : 0;
     // cout<<"jump_reward: "<<jump_reward<<endl;
     double jump_bonus = (state(1)>0.95) ? state(1)*state(1)  : 0;
     // cout<<"jump_bonus: "<<jump_bonus<<endl;
     double alive_bonus = 0.02;
-    reward = reward + torques_reward + angle_reward + vel_reward * 0.4 + jump_reward * 50 + jump_bonus * 4 + alive_bonus;
+    reward = reward + torques_reward + angle_reward + vel_reward  + jump_reward * 80 + jump_bonus * 5 + alive_bonus;
 
     return reward;
 }

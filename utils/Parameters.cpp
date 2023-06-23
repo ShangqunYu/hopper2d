@@ -27,7 +27,7 @@ Parameters::Parameters()
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
 
     kp = 15;
-    kd = 1.5 ;
+    kd = 1;
 
     max_torque << 70, 70, 70;
 
@@ -42,4 +42,19 @@ Parameters::Parameters()
     max_steps = 5000;
 
     time_skipping = 5;
+
+    //hypperparameters for optimization
+    opt_dt = 0.08;
+
+    //cost weight
+    QX  = DM::eye(2) * 10; QX(0,0) = 0;
+    QXd = DM::eye(2) * 10;
+    QTheta =  20;
+    QW = 20;
+    QC = DM::eye(2) * 0.001;
+
+    xk_des  = DM::zeros(2,1); xk_des(1,0)  = 0.8;
+    xdk_des = DM::zeros(2,1); xdk_des(0,0) = 2;
+    thetak_des = 0;
+    wk_des = 0;
 };

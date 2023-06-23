@@ -1,6 +1,8 @@
 #include <Eigen/Core>
+#include <casadi/casadi.hpp>
 
 using namespace Eigen;
+using namespace casadi;
 class Parameters {
     public:
         Parameters();
@@ -40,4 +42,21 @@ class Parameters {
 
         int max_steps;
         int time_skipping;
+
+        //cost weight
+        DM QX;   //position
+        DM QXd;  //velocity
+        double QTheta;   //orientation
+        double QW;   //angular velocity
+        DM QC;   //control cost
+
+        double opt_dt;
+        //desire state
+        DM xk_des;
+        DM xdk_des;
+        double thetak_des;
+        double wk_des;    
+
+        
+
 };

@@ -48,7 +48,7 @@ if __name__ == "__main__":
     #     if count > 1000:
     #         break
 
-    LOG_PATH = "./logs/jumpJun22"
+    LOG_PATH = "./logs/jumpJun23"
     num_cpu = 12  # Number of processes to use
     env = SubprocVecEnv([make_env('Hopper2dEnv-v0', i) for i in range(num_cpu)])
     env = VecMonitor(env)

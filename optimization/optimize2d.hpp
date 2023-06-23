@@ -4,7 +4,7 @@
 #include "../utils/eigenHelper.hpp"
 #include "../utils/State.hpp"
 #include "../utils/Control.hpp"
-#include "../utils/Parameters2d.hpp"
+#include "../utils/Parameters.hpp"
 #include "../utils/State2d.hpp"
 #include "build_desire_state.hpp"
 using namespace std;
@@ -12,8 +12,9 @@ using namespace casadi;
 
 struct contact_data
 {
-    vector<int>  cindex;
-    vector<int>  cs;
+    Eigen::MatrixXd  rcl;  // right contact location
+    Eigen::MatrixXd  lcl;  // left contact location
+    vector<int>  cs;  // contact status
 };
 struct logdata
 {
@@ -30,4 +31,4 @@ struct logdata
     Eigen::MatrixXd rc;
     Eigen::MatrixXd lc;
 };
-logdata optimize2d(Parameters2d p, State2d s, contact_data rout, contact_data lout, MatrixXd rcl, MatrixXd lcl, MatrixXd xk_des);
+logdata optimize2d(Parameters2d p, State2d s, contact_data cdata, MatrixXd xk_des);

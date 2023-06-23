@@ -2,12 +2,12 @@
 #include <iostream>  
 #include <typeinfo> 
 
-logdata optimize2d(Parameters2d p, State2d s, contact_data rout, contact_data lout, MatrixXd rcl, MatrixXd lcl, MatrixXd xk_des){
-   
+logdata optimize2d(Parameters2d p, State2d s, contact_data cdata, MatrixXd xk_des){
+    int pred_hor = cdata.cs.size();
     // store logging information
     logdata log; 
-    log.rc = MatrixXd::Zero(2, p.pred_hor);
-    log.lc = MatrixXd::Zero(2, p.pred_hor);
+    log.rc = MatrixXd::Zero(2, pred_hor);
+    log.lc = MatrixXd::Zero(2, pred_hor);
     // now the des dx is based on the predefined speed
     // p.xdk_des(0) = des_dx;
 
@@ -16,13 +16,13 @@ logdata optimize2d(Parameters2d p, State2d s, contact_data rout, contact_data lo
     //creating the optimization variables
     Opti opti = Opti();
     Slice all;
-    auto X     = opti.variable(6, p.pred_hor+1);
+    auto X     = opti.variable(6, pred_hor+1);
     auto x     = X(Slice(0,2), all);
     auto theta = X(Slice(2,3), all);
     auto xd    = X(Slice(3,5), all);
     auto w     = X(Slice(5,6), all);
 
-    auto con   = opti.variable(4, p.pred_hor);
+    auto con   = opti.variable(4, pred_hor);
     auto rf    = con(Slice(0,2), all);
     auto lf    = con(Slice(2,4), all);
 
@@ -64,12 +64,10 @@ logdata optimize2d(Parameters2d p, State2d s, contact_data rout, contact_data lo
         auto wk     =     w(all, k);
         auto rfk    =    rf(all, k);
         auto lfk    =    lf(all, k);
-        auto rck    =    EigenVectorTodm(rcl.col(rout.cindex[k]));
+        auto rck    =    EigenVectorTodm(cdata.rcl.col(k));
+        auto lck    =    EigenVectorTodm(cdata.lcl.col(k));
 
-        auto lck    =    EigenVectorTodm(lcl.col(lout.cindex[k]));
-
-        int rcsk    =    rout.cs[k];
-        int lcsk    =    lout.cs[k];
+        int csk    =    cdata.cs[k];
 
         // dynamics constraints
         auto xdd = 1/p.m * (rfk + lfk) + EigenMatrixTodm(p.gravity);
