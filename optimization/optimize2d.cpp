@@ -8,11 +8,7 @@ logdata optimize2d(Parameters2d p, State2d s, contact_data cdata, MatrixXd xk_de
     logdata log; 
     log.rc = MatrixXd::Zero(2, pred_hor);
     log.lc = MatrixXd::Zero(2, pred_hor);
-    // now the des dx is based on the predefined speed
-    // p.xdk_des(0) = des_dx;
-
    
-
     //creating the optimization variables
     Opti opti = Opti();
     Slice all;
@@ -85,22 +81,21 @@ logdata optimize2d(Parameters2d p, State2d s, contact_data cdata, MatrixXd xk_de
         opti.subject_to(theta(all, k+1) - thetak == wk*p.dt);
 
         // contact constraints && friction constraints
-        // 1. right foot
-        if (rcsk){
-            opti.subject_to(0<=rfk(1)<=p.max_react_force);
-            opti.subject_to( -p.mu*rfk(1)<=rfk(0)<=p.mu*rfk(1));
-            opti.subject_to( -p.bdbox <= rck-xk-p.fpose <= p.bdbox);
+        // 1. right & left foot
+        if (csk){
+            // right foot
+            opti.subject_to(  0          <=     rfk(1)     <=p.max_react_force);
+            opti.subject_to( -p.mu*rfk(1)<=     rfk(0)     <=p.mu*rfk(1));
+            //left foot
+            opti.subject_to(  0          <=     lfk(1)     <=p.max_react_force);
+            opti.subject_to( -p.mu*lfk(1)<=     lfk(0)     <=p.mu*lfk(1));
+            //kinematics constraints
+            opti.subject_to( p.lower_bdbox    <= (rck +lck)/2 -xk-p.fpose <= p.upper_bdbox);
         }else{
             opti.subject_to(rfk == DM::zeros(2,1));
-        }
-        // 2. left foot
-        if (lcsk){
-            opti.subject_to(0<=lfk(1)<=p.max_react_force);
-            opti.subject_to( -p.mu*lfk(1)<=lfk(0)<=p.mu*lfk(1));
-            opti.subject_to( -p.bdbox <= lck-xk-p.fpose <= p.bdbox);
-        }else{
             opti.subject_to(lfk == DM::zeros(2,1));
         }
+
 
         // constraint for the theta
         opti.subject_to(-p.theta_max <= theta(all, k+1) <= p.theta_max);

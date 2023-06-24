@@ -57,6 +57,10 @@ class Parameters {
         double thetak_des;
         double wk_des;    
 
+        DM upper_bdbox;
+        DM lower_bdbox;
+        DM fpose;
+
         
 
 };

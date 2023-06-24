@@ -57,4 +57,7 @@ Parameters::Parameters()
     xdk_des = DM::zeros(2,1); xdk_des(0,0) = 2;
     thetak_des = 0;
     wk_des = 0;
+    upper_bdbox = DM({0.156, 0.156});
+    lower_bdbox = DM({-0.156, -0.078});
+
 };
