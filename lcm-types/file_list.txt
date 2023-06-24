@@ -1,1 +1,1 @@
-
+lcmtypes/cart_pole_lcmt.class lcmtypes/hopper2d_lcmt.class
