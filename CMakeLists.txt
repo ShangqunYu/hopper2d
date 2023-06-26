@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "-fPIC")
 
 # find_package(Python 3.10.11 COMPONENTS Interpreter Development REQUIRED)
 
+include_directories("/usr/local/include/")
 # eigen
 include_directories("/usr/local/include/eigen3/")
 # casadi
