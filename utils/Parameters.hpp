@@ -14,6 +14,8 @@ class Parameters {
         double Ibody, I0, I1, I2; // inertia
 
         double l0, l1, l2, l21, lbody; // length of link
+        Vector2d c_to_b;
+        Vector2d e_to_b;
 
         double c0, c1, c2; // length to center of mass
 
@@ -60,7 +62,8 @@ class Parameters {
         DM upper_bdbox;
         DM lower_bdbox;
         DM fpose;
-
-        
-
+        double theta_max;
+        double max_react_force;
+        DM gravity_opti;
+        int max_iter;
 };

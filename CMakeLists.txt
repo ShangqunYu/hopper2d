@@ -40,7 +40,7 @@ add_subdirectory(render)
 add_subdirectory(matlab_gen)
 add_subdirectory(cart-pole)
 add_subdirectory(machinelearning)
-
+add_subdirectory(optimization)
 
 # add the executable
 add_executable(hopper2d main.cpp ) 
@@ -53,6 +53,7 @@ target_include_directories(hopper2d PUBLIC
                             PUBLIC utils
                             PUBLIC matlab_gen
                             PUBLIC cart-pole
+                            PUBLIC optimization
                             PUBLIC machinelearning)
 
                           
@@ -60,7 +61,7 @@ target_include_directories(hopper2d PUBLIC
 message(STATUS "${PROJECT_BINARY_DIR}")
 
 
-target_link_libraries(hopper2d hopper_simulate utils casadi matlab_gen cart-pole_system animate)
+target_link_libraries(hopper2d hopper_simulate utils casadi matlab_gen cart-pole_system animate optimize)
 #target_link_libraries(hopper2d hopper_simulate dmToEigen casadi sfml-graphics)
 
 
