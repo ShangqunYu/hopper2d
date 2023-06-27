@@ -19,7 +19,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
 
     // cout<<"xk_des: \n"<<xk_des<<endl;
     log = optimize2d(p, s, cdata, xk_des);
-    exit(0);
+
 
     if (log.done || num_steps >100){
         initstate();
@@ -45,11 +45,11 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
     return s;
 }
 
-void hopper2dOptiEnv::reset(){
+State2d hopper2dOptiEnv::reset(){
     num_steps = 0;
     initstate();
     log.done = false;
-
+    return s;
 }
 
 
@@ -73,7 +73,6 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
     for (int i=0; i<contact_hor; i++){
         cdata.cs.push_back(1);
         cdata.cl(0, i) = s.x(0) + s.curr_contact_loc;
-
     }
 
     // push flight_hor ones into the contact data

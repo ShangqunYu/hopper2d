@@ -16,7 +16,7 @@ class hopper2dOptiEnv{
         logdata log;
         // Animator2d animator;
         State2d step(double contact_loc, double contact_dts, double fligth_dts);
-        void reset();
+        State2d reset();
         // void render();
         void initstate();
         contact_data get_contact_data(double contact_loc, int contact_hor, int flight_hor);

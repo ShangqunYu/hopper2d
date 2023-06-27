@@ -1,0 +1,9 @@
+struct hopper2dOpti_lcmt
+{
+    double body_pos[2];
+    double theta;
+
+    double under_contact;
+    double contact_pos;
+}
+
