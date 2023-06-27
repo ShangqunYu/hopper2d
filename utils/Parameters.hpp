@@ -1,7 +1,7 @@
+#pragma once
 #include <Eigen/Core>
 #include <casadi/casadi.hpp>
 
-using namespace Eigen;
 using namespace casadi;
 class Parameters {
     public:
@@ -14,8 +14,8 @@ class Parameters {
         double Ibody, I0, I1, I2; // inertia
 
         double l0, l1, l2, l21, lbody; // length of link
-        Vector2d c_to_b;
-        Vector2d e_to_b;
+        Eigen::Vector2d c_to_b;
+        Eigen::Vector2d e_to_b;
 
         double c0, c1, c2; // length to center of mass
 
@@ -28,11 +28,11 @@ class Parameters {
         double dt;
         int dim;
         // declare a 12 dim eigen vector
-        VectorXd init_state;
+        Eigen::VectorXd init_state;
 
         double kp, kd;
 
-        Vector3d max_torque;
+        Eigen::Vector3d max_torque;
 
         double terminal_height;
         double terminal_width;

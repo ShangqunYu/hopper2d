@@ -11,7 +11,7 @@ class hopper2dOptiEnv{
         hopper2dOptiEnv();
         ~hopper2dOptiEnv(){}
         double num_steps;
-        Parameters2d p;
+        Parameters p;
         State2d s;
         logdata log;
         // Animator2d animator;
@@ -19,8 +19,9 @@ class hopper2dOptiEnv{
         void reset();
         // void render();
         void initstate();
-        contact_data get_contact_data(contact_loc, contact_hor, flight_hor)
+        contact_data get_contact_data(double contact_loc, int contact_hor, int flight_hor);
         MatrixXd get_desireX();
+        int pred_hor;
 
 
 };

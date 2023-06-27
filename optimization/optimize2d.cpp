@@ -155,5 +155,13 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.theta = opti.debug().value(theta);
     log.cf = opti.debug().value(cf);
     log.ef = opti.debug().value(ef);
+
+    cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
+    cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
+    cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
+    cout<< "w \n" <<dmToEigen(log.w)<<endl;
+    cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
+    cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
+
     return log;
 }

@@ -5,12 +5,9 @@ Parameters::Parameters()
     mbody = 8; m0 = 2.7; m1 = 0.9; m2 = 0.3;  
     M = mbody + m0 + m1 + m2; // Total Mass
 
-
-
     l0 = 0.35; l1 = 0.36; l2 = 0.1; l21 = 0.06; lbody = 0.3; // length of link
     c_to_b << l2, 0.0;
     e_to_b << -l21, 0.0;
-
 
     Ibody = mbody * lbody * lbody / 6; I0 = m0 * l0 * l0 / 12; I1 = m1 * l1 * l1 / 12; I2 = m2 * (l2 + l21) * (l2 + l21) / 12; // inertia
     c0 = 0.13; c1 = 0.18;  c2 = 0.02; // length to center of mass
@@ -67,4 +64,4 @@ Parameters::Parameters()
     gravity_opti = DM({0, -gravity});
     max_iter = 100;
 
-};
+}

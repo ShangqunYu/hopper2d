@@ -1,20 +1,19 @@
 #include "eigenHelper.hpp"
 
-Eigen::MatrixXd dmToEigen(vector<DM> &m){
-    std::pair<int, int> sizes = m[0].size();
-    int row = sizes.first;
-    int col = sizes.second;
-    std::vector<double> values = m[0].get_elements();
-    Eigen::MatrixXd e(row,col);
-    for (int i = 0; i < col; i++)
+Eigen::MatrixXd dmToEigen(casadi::DM &m)
+{
+    int rows = m.size1();
+    int cols = m.size2();
+    Eigen::MatrixXd out = Eigen::MatrixXd::Zero(rows, cols);
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < row; j++)
+        for (int j = 0; j < cols; j++)
         {
-            e(j,i)=values[i*row+j];
+            out(i, j) = m(i, j).scalar();
         }
-
     }
-    return e;
+    return out;
+
 }
 
 casadi::DM EigenTodm(Eigen::MatrixXd matrix){

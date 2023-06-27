@@ -21,9 +21,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
     log = optimize2d(p, s, cdata, xk_des);
     exit(0);
 
-
-
-    if (log.done || num_steps >100 || s.x(0)>p.maxX){
+    if (log.done || num_steps >100){
         initstate();
         if (log.done){
             s.reward = -10;
@@ -40,7 +38,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         s.theta = log.theta(0,log.theta.size2()-1).scalar();
         s.w     = log.w(0,log.w.size2()-1).scalar();
         s.reward = log.reward; // reward is from the optimization
-        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.size2()-1) - s.x(0); // relative location from contact to the current com
+        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
     }
     num_steps++;
     
@@ -67,8 +65,7 @@ void hopper2dOptiEnv::initstate(){
 }
 
 
-contact_data hopper2dOptiEnv::get_contact_data(contact_loc, contact_hor , flight_hor){
-    int pred_hor = contact_hor + flight_hor + 1;  // +1 is for the contact after flight
+contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_hor , int flight_hor){
     contact_data cdata;
     cdata.cl = MatrixXd::Zero(2, pred_hor);
 
@@ -85,7 +82,7 @@ contact_data hopper2dOptiEnv::get_contact_data(contact_loc, contact_hor , flight
     }
     // push the 1 contact after flight
     cdata.cs.push_back(1); 
-    cdata.cl(0, contact_hor) = s.x(0) + contact_loc;
+    cdata.cl(0, pred_hor-1) = s.x(0) + contact_loc;
 
     return cdata;
 }
@@ -93,9 +90,9 @@ contact_data hopper2dOptiEnv::get_contact_data(contact_loc, contact_hor , flight
 
 
 MatrixXd hopper2dOptiEnv::get_desireX(){
-    MatrixXd xk_des = MatrixXd::Zero(2, p.pred_hor+1);
+    MatrixXd xk_des = MatrixXd::Zero(2, pred_hor+1);
 
-    for (int i = 0; i < p.pred_hor+1; i++){
+    for (int i = 0; i < pred_hor+1; i++){
         // current we just want to maintain the same height as the initial state, may be it's not ideal for a hopping robot. 
         xk_des(1, i) =  p.init_state(1);
     }
