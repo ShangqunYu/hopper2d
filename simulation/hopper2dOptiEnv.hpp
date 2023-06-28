@@ -22,6 +22,8 @@ class hopper2dOptiEnv{
         contact_data get_contact_data(double contact_loc, int contact_hor, int flight_hor);
         MatrixXd get_desireX();
         int pred_hor;
+        double prev_x;
+        double calc_reward();
 
 
 };

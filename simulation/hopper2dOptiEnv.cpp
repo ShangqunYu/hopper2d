@@ -33,11 +33,12 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         Slice all;
         DM x  = log.x(all,log.x.size2()-1);
         DM xd = log.xd(all,log.xd.size2()-1);
+        prev_x = s.x(0);
         s.x     = dmToEigen(x);
         s.xd    = dmToEigen(xd);
         s.theta = log.theta(0,log.theta.size2()-1).scalar();
         s.w     = log.w(0,log.w.size2()-1).scalar();
-        s.reward = log.reward; // reward is from the optimization
+        s.reward = calc_reward(); // reward is from the optimization
         s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
 
     }
@@ -50,7 +51,20 @@ State2d hopper2dOptiEnv::reset(){
     num_steps = 0;
     initstate();
     log.done = false;
+    pred_hor = 0;
+    prev_x = 0;
     return s;
+}
+
+double hopper2dOptiEnv::calc_reward(){
+    double reward = 0;
+
+    double vel = (s.x(0) - prev_x) / (pred_hor * p.opt_dt);
+    double vel_reward = exp(-(p.xdk_des(0,0).scalar() - vel) * (p.xdk_des(0,0).scalar() - vel) / (0.8*0.8)) / 0.8;
+
+    reward = vel_reward;
+
+    return reward;
 }
 
 
@@ -86,7 +100,6 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
 
     return cdata;
 }
-
 
 
 MatrixXd hopper2dOptiEnv::get_desireX(){
