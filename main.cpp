@@ -20,11 +20,16 @@ int main(int argc, char* argv[]){
     env.reset();
     State2d s = env.step(0.2, 0.4, 0.4);
     env.render();
-    env.step(0.5, 0.4, 0.4);
+    cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
+    env.step(0.6, 0.4, 0.4);
     env.render();
-    // env.step(0.4, 0.4, 0.4);
-    // env.render();
-
+    cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
+    env.step(0.9, 0.4, 0.4);
+    env.render();
+    cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
+    env.step(0.9, 0.4, 0.4);
+    env.render();
+    cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
     State2d s1 = env.reset();
 
     cout << "s1.x: " << s1.x << endl;

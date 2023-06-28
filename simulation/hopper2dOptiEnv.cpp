@@ -39,6 +39,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         s.w     = log.w(0,log.w.size2()-1).scalar();
         s.reward = log.reward; // reward is from the optimization
         s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
+
     }
     num_steps++;
     
@@ -75,7 +76,7 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
         cdata.cl(0, i) = s.x(0) + s.curr_contact_loc;
     }
 
-    // push flight_hor ones into the contact data
+    // push flight_hor zeros into the contact data
     for (int i=0; i<flight_hor; i++){
         cdata.cs.push_back(0);
     }
