@@ -18,7 +18,12 @@ int main(int argc, char* argv[]){
 
     hopper2dOptiEnv env;
     env.reset();
-    State2d s = env.step(0.4, 0.5, 0.5);
+    State2d s = env.step(0.2, 0.4, 0.4);
+    env.render();
+    env.step(0.5, 0.4, 0.4);
+    env.render();
+    // env.step(0.4, 0.4, 0.4);
+    // env.render();
 
     State2d s1 = env.reset();
 

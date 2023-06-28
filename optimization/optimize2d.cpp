@@ -93,14 +93,14 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
             opti.subject_to(-p.fric_coeff*efk(1)<= efk(0) <=p.fric_coeff*efk(1));
             //kinematics constraints
             auto cl = EigenMatrixTodm(cdata.cl.col(k));
-            opti.subject_to( p.lower_bdbox  <= cl - xk - p.fpose <= p.upper_bdbox);
+            // opti.subject_to( p.lower_bdbox  <= cl - xk - p.fpose <= p.upper_bdbox);
         }else{
             opti.subject_to(cfk == DM::zeros(2,1));
             opti.subject_to(efk == DM::zeros(2,1));
         }
 
         // constraint for the theta
-        opti.subject_to(-p.theta_max <= theta(all, k+1) <= p.theta_max);
+        // opti.subject_to(-p.theta_max <= theta(all, k+1) <= p.theta_max);
 
     }
 

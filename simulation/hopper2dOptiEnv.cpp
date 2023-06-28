@@ -101,9 +101,9 @@ MatrixXd hopper2dOptiEnv::get_desireX(){
 
 
 
-// void hopper2dOptiEnv::render(){
-//     animator.animate(log);
-// }
+void hopper2dOptiEnv::render(){
+    animator.animate(log);
+}
 
 
 

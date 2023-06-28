@@ -53,6 +53,7 @@ class hopper2d_lcmt(object):
         return self
     _decode_one = staticmethod(_decode_one)
 
+    _hash = None
     def _get_hash_recursive(parents):
         if hopper2d_lcmt in parents: return 0
         tmphash = (0x66d7a1ad86104ea5) & 0xffffffffffffffff
@@ -66,8 +67,4 @@ class hopper2d_lcmt(object):
             hopper2d_lcmt._packed_fingerprint = struct.pack(">Q", hopper2d_lcmt._get_hash_recursive([]))
         return hopper2d_lcmt._packed_fingerprint
     _get_packed_fingerprint = staticmethod(_get_packed_fingerprint)
-
-    def get_hash(self):
-        """Get the LCM hash of the struct"""
-        return struct.unpack(">Q", hopper2d_lcmt._get_packed_fingerprint())[0]
 

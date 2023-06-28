@@ -15,8 +15,8 @@ void AnimatorOpti::animate(logdata log)
         double x = log.x(0,i).scalar();
         double y = log.x(1,i).scalar();
         double theta = log.theta(0,i).scalar();
-        send_message(x, y, theta, theta, log.cd.cs[i-1]);
-        usleep(10000);
+        send_message(x, y, theta, log.cd.cl(0, i-1), log.cd.cs[i-1]);
+        usleep(100000);
     }
 
 }
