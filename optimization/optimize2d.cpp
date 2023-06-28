@@ -127,10 +127,10 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     opti.set_initial(ef, ef_init);
 
     Dict p_opts; p_opts["expand"] = true;
-    // p_opts["print_time"] = 0;
+    p_opts["print_time"] = 0;
     Dict s_opts; s_opts["max_iter"] = p.max_iter;
-    // s_opts["print_level"] = 0;
-    // s_opts["sb"] = "yes";
+    s_opts["print_level"] = 0;
+    s_opts["sb"] = "yes";
     
     opti.solver("ipopt", p_opts, s_opts);
     log.done = false;
@@ -138,7 +138,7 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
         log.reward = c;
-        cout<< "the cost "<< c <<endl;
+        // cout<< "the cost "<< c <<endl;
         //cout<< "the reward "<< log.reward <<endl;
     }
     catch (CasadiException) {
@@ -156,13 +156,13 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cf = opti.debug().value(cf);
     log.ef = opti.debug().value(ef);
 
-    cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
-    cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
-    cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
-    cout<< "w \n" <<dmToEigen(log.w)<<endl;
-    cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
-    cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
-    cout<< "contact loc \n" << cdata.cl<<   endl;
+    // cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
+    // cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
+    // cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
+    // cout<< "w \n" <<dmToEigen(log.w)<<endl;
+    // cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
+    // cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
+    // cout<< "contact loc \n" << cdata.cl<<   endl;
 
     return log;
 }

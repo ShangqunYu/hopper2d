@@ -16,8 +16,9 @@ class Hopper2dOptiWrapper {
         ~Hopper2dOptiWrapper() {
             cout << "Hopper2dOptiWrapper destructor" << endl;
         }
-        void step(VectorXd actions) {
-            // env.step(actions);
+        VectorXd step(VectorXd actions) {
+            env.step(actions(0), actions(1), actions(2));
+            return get_obs();
         }
 
         VectorXd get_obs(){
@@ -27,27 +28,27 @@ class Hopper2dOptiWrapper {
                 + 1                       // theta
                 + 1                      // theta dot
                 + 1                     // current contact location
-                + 1                     // reward
-                + 1                     // done
             );
-            obs << env.s.x(1), env.s.xd, env.s.theta, env.s.w, env.s.curr_contact_loc, env.s.reward, env.log.done;
+            obs << env.s.x(1), env.s.xd, env.s.theta, env.s.w, env.s.curr_contact_loc;
+            return obs;
+        }
+
+        double calc_reward(){
+            return env.s.reward;
+        }
+
+        bool is_done(){
+            return env.log.done;
         }
         
         void render() {
             env.render();
         }
 
-        void reset(){
+        VectorXd reset(){
             env.reset();
+            return get_obs();
         }
-
-        // double calc_reward(){
-        //     return env.calc_jump_reward();
-        // }
-
-        // bool is_done(){
-        //     return env.is_done();
-        // }
 
         hopper2dOptiEnv env;
 };
@@ -58,8 +59,8 @@ PYBIND11_MODULE(hopper2dOptiWrapper, m) {
         .def(py::init<>())
         .def("step", &Hopper2dOptiWrapper::step)
         .def("render", &Hopper2dOptiWrapper::render)
-        .def("reset", &Hopper2dOptiWrapper::reset);
-        // .def("calc_reward", &Hopper2dOptiWrapper::calc_reward)
-        // .def("is_done", &Hopper2dOptiWrapper::is_done);
+        .def("reset", &Hopper2dOptiWrapper::reset)
+        .def("calc_reward", &Hopper2dOptiWrapper::calc_reward)
+        .def("is_done", &Hopper2dOptiWrapper::is_done);
 
 }

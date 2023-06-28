@@ -19,8 +19,6 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
 
     // cout<<"xk_des: \n"<<xk_des<<endl;
     log = optimize2d(p, s, cdata, xk_des);
-
-
     if (log.done || num_steps >100){
         initstate();
         if (log.done){

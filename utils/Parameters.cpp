@@ -63,7 +63,6 @@ Parameters::Parameters()
     lower_bdbox = DM({-0.4, -0.4});
     theta_max = 1.0 / 6 * M_PI;
     //output theta_max
-    std::cout << "theta_max: " << theta_max << std::endl;
     max_react_force = 200;
     gravity_opti = DM({0, -gravity});
     max_iter = 100;

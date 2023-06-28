@@ -1,4 +1,6 @@
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/utils)
-pybind11_add_module(hopper2dWrapper hopper2dWrapper.cpp hopper2dOptiWrapper.cpp)
+pybind11_add_module(hopper2dWrapper hopper2dWrapper.cpp)
+pybind11_add_module(hopper2dOptiWrapper hopper2dOptiWrapper.cpp)
 target_link_libraries(hopper2dWrapper PRIVATE hopper_simulate animate lcm casadi)
+target_link_libraries(hopper2dOptiWrapper PRIVATE hopper_simulate animate lcm casadi)
