@@ -137,8 +137,11 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     try {
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
-        log.reward = c;
+        double average_cost = c/pred_hor;
+        log.reward =  (1.0/average_cost - 1.0/35.0) * 35.0; 
         // cout<< "the cost "<< c <<endl;
+        // cout<<"pred_hor "<<pred_hor<<endl;
+        // cout<<"reward "<<log.reward<<endl;
         //cout<< "the reward "<< log.reward <<endl;
     }
     catch (CasadiException) {

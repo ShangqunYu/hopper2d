@@ -36,9 +36,9 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         s.xd    = dmToEigen(xd);
         s.theta = log.theta(0,log.theta.size2()-1).scalar();
         s.w     = log.w(0,log.w.size2()-1).scalar();
-        s.reward = calc_reward(); // reward is from the optimization
-        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
-
+        s.reward = log.reward; // reward is from the optimization
+        // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
+        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1)  // absolute location of the contact
     }
     num_steps++;
     
@@ -85,7 +85,7 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
     // push contact_hor ones into the contact data
     for (int i=0; i<contact_hor; i++){
         cdata.cs.push_back(1);
-        cdata.cl(0, i) = s.x(0) + s.curr_contact_loc;
+        cdata.cl(0, i) = s.curr_contact_loc;
     }
 
     // push flight_hor zeros into the contact data
@@ -94,7 +94,7 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
     }
     // push the 1 contact after flight
     cdata.cs.push_back(1); 
-    cdata.cl(0, pred_hor-1) = s.x(0) + contact_loc;
+    cdata.cl(0, pred_hor-1) = s.curr_contact_loc + contact_loc;
 
     return cdata;
 }
