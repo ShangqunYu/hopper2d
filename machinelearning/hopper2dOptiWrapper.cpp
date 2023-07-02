@@ -23,13 +23,12 @@ class Hopper2dOptiWrapper {
 
         VectorXd get_obs(){
             VectorXd obs = VectorXd::Zero(
-                  env.s.x.size() - 1      // y position of the body
+                  env.s.x.size()       //x position relative to contact and y position of the body
                 + env.s.xd.size()         // xy vel of the body
                 + 1                       // theta
                 + 1                      // theta dot
-                + 1                     // current contact location
             );
-            obs << env.s.x(1), env.s.xd, env.s.theta, env.s.w, env.s.curr_contact_loc;
+            obs << env.s.x(0) - env.s.curr_contact_loc, env.s.x(1), env.s.xd, env.s.theta, env.s.w;
             return obs;
         }
 
@@ -62,5 +61,4 @@ PYBIND11_MODULE(hopper2dOptiWrapper, m) {
         .def("reset", &Hopper2dOptiWrapper::reset)
         .def("calc_reward", &Hopper2dOptiWrapper::calc_reward)
         .def("is_done", &Hopper2dOptiWrapper::is_done);
-
 }

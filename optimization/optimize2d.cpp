@@ -114,7 +114,7 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     // 4. angular velocity
     opti.set_initial(w,     DM::repmat(DM(s.w),               1, pred_hor+1));
 
-    // set the initial guess for the contact
+    // set the initial guess for the reaction force
     DM cf_init = DM::zeros(2, pred_hor);
     DM ef_init = DM::zeros(2, pred_hor);
     for (int i = 0; i < pred_hor; i++){

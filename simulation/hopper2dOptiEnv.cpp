@@ -36,9 +36,9 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         s.xd    = dmToEigen(xd);
         s.theta = log.theta(0,log.theta.size2()-1).scalar();
         s.w     = log.w(0,log.w.size2()-1).scalar();
-        s.reward = log.reward; // reward is from the optimization
+        s.reward = log.reward + flight_dts * 0.05; // reward is from the optimization
         // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
-        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1)  // absolute location of the contact
+        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1);  // absolute location of the contact
     }
     num_steps++;
     
