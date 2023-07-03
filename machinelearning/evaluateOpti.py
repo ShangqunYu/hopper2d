@@ -9,7 +9,7 @@ gym.envs.register(
     )
 env = gym.make('Hopper2dOptiEnv-v0')
 obs,_ = env.reset()
-model = PPO.load("./logs/optijumpJun29/best_model.zip", print_system_info=True)
+model = PPO.load("./logs/optijumpJuly02/best_model.zip", print_system_info=True)
 done = False
 count = 0
 totalReward = 0
