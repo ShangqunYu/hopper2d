@@ -138,6 +138,7 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
         double average_cost = c/pred_hor;
+        // cout<<"average_cost "<<average_cost<<endl;
         log.reward =  (1.0/average_cost - 1.0/35.0) * 35.0; 
         // cout<< "the cost "<< c <<endl;
         // cout<<"pred_hor "<<pred_hor<<endl;

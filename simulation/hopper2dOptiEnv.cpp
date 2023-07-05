@@ -68,12 +68,14 @@ double hopper2dOptiEnv::calc_reward(){
 
 
 void hopper2dOptiEnv::initstate(){
-    Vector2d x(2); x<< 0, p.init_state(1);
-    Vector2d xd(2); xd<< 0, 0;
-    double theta = 0;
-    double w = 0;
+    // add a bit randomness to the state
+    Vector2d x(2); x<< 0, p.init_state(1) + (double)rand()/RAND_MAX * 0.01;;
+    Vector2d xd(2); xd<< (double)rand()/RAND_MAX * 0.01, (double)rand()/RAND_MAX * 0.01;
+    double theta = (double)rand()/RAND_MAX * 0.01;
+    double w = (double)rand()/RAND_MAX * 0.01;
     double reward = 0;
-    double curr_contact_loc = 0;
+    double curr_contact_loc = (double)rand()/RAND_MAX * 0.01;
+    
     s = State2d(x, xd, theta, w, reward, curr_contact_loc);
 }
 
@@ -95,6 +97,7 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
     // push the 1 contact after flight
     cdata.cs.push_back(1); 
     cdata.cl(0, pred_hor-1) = s.curr_contact_loc + contact_loc;
+    // cdata.cl(0, pred_hor-1) = s.x(0) + contact_loc;
 
     return cdata;
 }
