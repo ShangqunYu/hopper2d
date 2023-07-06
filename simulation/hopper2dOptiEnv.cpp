@@ -69,7 +69,7 @@ double hopper2dOptiEnv::calc_reward(){
 
 void hopper2dOptiEnv::initstate(){
     // add a bit randomness to the state
-    Vector2d x(2); x<< 0, p.init_state(1) + (double)rand()/RAND_MAX * 0.01;;
+    Vector2d x(2); x<< 0, p.init_state(1) + (double)rand()/RAND_MAX * 0.01;
     Vector2d xd(2); xd<< (double)rand()/RAND_MAX * 0.01, (double)rand()/RAND_MAX * 0.01;
     double theta = (double)rand()/RAND_MAX * 0.01;
     double w = (double)rand()/RAND_MAX * 0.01;

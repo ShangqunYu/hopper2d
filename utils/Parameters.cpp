@@ -61,6 +61,8 @@ Parameters::Parameters()
     // lower_bdbox = DM({-0.156, -0.078});
     upper_bdbox = DM({0.4, 0.3});
     lower_bdbox = DM({-0.4, -0.3});
+    // upper_bdbox = DM({1, 1});
+    // lower_bdbox = DM({-1, -1});    
     theta_max = 1.0 / 6 * M_PI;
     //output theta_max
     max_react_force = 200;

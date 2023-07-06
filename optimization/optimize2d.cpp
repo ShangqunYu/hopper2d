@@ -9,7 +9,9 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cd = cdata;
    
     //creating the optimization variables
-    Opti opti = Opti();
+    // Opti opti = Opti();
+    Opti opti;
+    opti = Opti("conic");
     Slice all;
     auto X     = opti.variable(6, pred_hor+1);
     auto x     = X(Slice(0,2), all);
@@ -127,12 +129,17 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     opti.set_initial(ef, ef_init);
 
     Dict p_opts; p_opts["expand"] = true;
-    p_opts["print_time"] = 0;
-    Dict s_opts; s_opts["max_iter"] = p.max_iter;
-    s_opts["print_level"] = 0;
-    s_opts["sb"] = "yes";
+    //p_opts["print_time"] = 0;
+    Dict s_opts;      //s_opts["max_iter"] = p.max_iter;
+    // s_opts["print_level"] = 0;
+    // s_opts["sb"] = "yes";
     
-    opti.solver("ipopt", p_opts, s_opts);
+    // opti.solver("ipopt", p_opts, s_opts);
+    string solverName; 
+    solverName = "gurobi"; 
+    s_opts["TimeLimit"] = 0.02;
+    s_opts["OutputFlag"] = 0;
+    opti.solver(solverName, p_opts, s_opts);
     log.done = false;
     try {
         auto sol = opti.solve();
