@@ -6,8 +6,10 @@ Parameters::Parameters()
     M = mbody + m0 + m1 + m2; // Total Mass
 
     l0 = 0.35; l1 = 0.36; l2 = 0.1; l21 = 0.06; lbody = 0.3; // length of link
-    c_to_b << l2, 0.0;
-    e_to_b << -l21, 0.0;
+    // c_to_b << l2, 0.0;
+    // e_to_b << -l21, 0.0;
+    c_to_b << 1, 0.0;
+    e_to_b << -1, 0.0;
 
     Ibody = mbody * lbody * lbody / 6; I0 = m0 * l0 * l0 / 12; I1 = m1 * l1 * l1 / 12; I2 = m2 * (l2 + l21) * (l2 + l21) / 12; // inertia
     c0 = 0.13; c1 = 0.18;  c2 = 0.02; // length to center of mass
@@ -50,19 +52,19 @@ Parameters::Parameters()
     QXd = DM::eye(2) * 10;
     QTheta =  20;
     QW = 20;
-    QC = DM::eye(2) * 0.001;
+    QC = DM::eye(2) * 0.000001;
 
-    xk_des  = DM::zeros(2,1); xk_des(1,0)  = 0.8;
+    // xk_des  = DM::zeros(2,1); xk_des(1,0)  = 0.8;
     xdk_des = DM::zeros(2,1); xdk_des(0,0) = 1;
     thetak_des = 0;
     wk_des = 0;
     fpose = DM({0, -init_state(1)});
     // upper_bdbox = DM({0.156, 0.156});
     // lower_bdbox = DM({-0.156, -0.078});
-    upper_bdbox = DM({0.4, 0.3});
-    lower_bdbox = DM({-0.4, -0.3});
-    // upper_bdbox = DM({1, 1});
-    // lower_bdbox = DM({-1, -1});    
+    // upper_bdbox = DM({0.4, 0.3});
+    // lower_bdbox = DM({-0.4, -0.3});
+    upper_bdbox = DM({10, 10});
+    lower_bdbox = DM({-10, -10});    
     theta_max = 1.0 / 6 * M_PI;
     //output theta_max
     max_react_force = 200;

@@ -9,9 +9,9 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cd = cdata;
    
     //creating the optimization variables
-    // Opti opti = Opti();
-    Opti opti;
-    opti = Opti("conic");
+    Opti opti = Opti();
+    // Opti opti;
+    // opti = Opti("conic");
     Slice all;
     auto X     = opti.variable(6, pred_hor+1);
     auto x     = X(Slice(0,2), all);
@@ -32,7 +32,7 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto wk     =     w(all, k);
         auto cfk    =  cf(all, k-1);
         auto efk    =  ef(all, k-1);
-
+    
         auto err_xk     = xk     - EigenVectorTodm(xk_des.col(k));
         auto err_xdk    = xdk    - p.xdk_des;
         auto err_thetak = thetak - p.thetak_des;
@@ -45,6 +45,9 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
              + mtimes(mtimes(       cfk.T(), p.QC),     cfk)
              + mtimes(mtimes(       efk.T(), p.QC),     efk);
     }
+    // auto terminal_err = x(all, pred_hor) - EigenVectorTodm(xk_des.col(pred_hor));
+    // auto weight = DM::eye(2) * 40;
+    // obj += mtimes(mtimes( terminal_err.T(), weight),  terminal_err);
     opti.minimize(obj);
 
     // initial constraint
@@ -134,12 +137,12 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     // s_opts["print_level"] = 0;
     // s_opts["sb"] = "yes";
     
-    // opti.solver("ipopt", p_opts, s_opts);
-    string solverName; 
-    solverName = "gurobi"; 
-    s_opts["TimeLimit"] = 0.02;
-    s_opts["OutputFlag"] = 0;
-    opti.solver(solverName, p_opts, s_opts);
+    opti.solver("ipopt", p_opts, s_opts);
+    // string solverName; 
+    // solverName = "gurobi"; 
+    //s_opts["TimeLimit"] = 0.4;
+    //s_opts["OutputFlag"] = 0;
+    // opti.solver(solverName, p_opts, s_opts);
     log.done = false;
     try {
         auto sol = opti.solve();
@@ -167,13 +170,13 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cf = opti.debug().value(cf);
     log.ef = opti.debug().value(ef);
 
-    // cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
-    // cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
-    // cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
-    // cout<< "w \n" <<dmToEigen(log.w)<<endl;
-    // cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
-    // cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
-    // cout<< "contact loc \n" << cdata.cl<<   endl;
+    cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
+    cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
+    cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
+    cout<< "w \n" <<dmToEigen(log.w)<<endl;
+    cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
+    cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
+    cout<< "contact loc \n" << cdata.cl<<   endl;
 
     return log;
 }

@@ -12,7 +12,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
     int contact_hor = floor(contact_dts / p.opt_dt);
     int flight_hor = floor(flight_dts / p.opt_dt);
     pred_hor = contact_hor + flight_hor + 1;  // +1 is for the contact after flight
-
+    cout << "predhor: " << pred_hor << endl;
     contact_data cdata = get_contact_data(contact_loc, contact_hor , flight_hor);
 
     MatrixXd xk_des = get_desireX();
@@ -69,12 +69,12 @@ double hopper2dOptiEnv::calc_reward(){
 
 void hopper2dOptiEnv::initstate(){
     // add a bit randomness to the state
-    Vector2d x(2); x<< 0, p.init_state(1) + (double)rand()/RAND_MAX * 0.01;
-    Vector2d xd(2); xd<< (double)rand()/RAND_MAX * 0.01, (double)rand()/RAND_MAX * 0.01;
-    double theta = (double)rand()/RAND_MAX * 0.01;
-    double w = (double)rand()/RAND_MAX * 0.01;
+    Vector2d x(2); x<< -0.2, p.init_state(1);
+    Vector2d xd(2); xd<<1 , 0;
+    double theta = 0;
+    double w = 0;
     double reward = 0;
-    double curr_contact_loc = (double)rand()/RAND_MAX * 0.01;
+    double curr_contact_loc = 0;
     
     s = State2d(x, xd, theta, w, reward, curr_contact_loc);
 }
@@ -106,10 +106,13 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
 MatrixXd hopper2dOptiEnv::get_desireX(){
     MatrixXd xk_des = MatrixXd::Zero(2, pred_hor+1);
 
+    // making a vector lineaized interpolate 
     for (int i = 0; i < pred_hor+1; i++){
         // current we just want to maintain the same height as the initial state, may be it's not ideal for a hopping robot. 
         xk_des(1, i) =  p.init_state(1);
     }
+    xk_des(0, pred_hor) = 0;
+    cout<<"xk_des: \n"<<xk_des<<endl;
     return xk_des;
 }
 
