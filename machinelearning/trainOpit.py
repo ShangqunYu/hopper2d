@@ -1,7 +1,7 @@
 import gymnasium as gym
 from env.hopper2dOptiEnv import Hopper2dOptiEnv
 import numpy as np
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, SAC
 from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.env_util import make_vec_env
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # env = gym.make('Hopper2dOptiEnv-v0')
     # obs = env.reset()
     # breakpoint()
-    LOG_PATH = "./logs/optijumpJuly05"
+    LOG_PATH = "./logs/optijumpJuly07sac"
     num_cpu = 12  # Number of processes to use
     env = SubprocVecEnv([make_env('Hopper2dOptiEnv-v0', i) for i in range(num_cpu)])
     env = VecMonitor(env)
@@ -54,7 +54,8 @@ if __name__ == "__main__":
     )
 
 
-    model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
+    model = SAC("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
+    # model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
 
     model.learn(total_timesteps=5000000, callback=[checkpoint_callback, eval_callback])
     model.save(LOG_PATH + "/model")

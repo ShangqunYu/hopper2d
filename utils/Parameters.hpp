@@ -66,4 +66,6 @@ class Parameters {
         double max_react_force;
         DM gravity_opti;
         int max_iter;
+
+        double min_yspeed;
 };

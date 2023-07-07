@@ -9,7 +9,9 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cd = cdata;
    
     //creating the optimization variables
+    //1. ipopt
     Opti opti = Opti();
+    //2. Gurobi
     // Opti opti;
     // opti = Opti("conic");
     Slice all;
@@ -38,12 +40,14 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto err_thetak = thetak - p.thetak_des;
         auto err_wk     = wk     - p.wk_des;
 
-        obj += mtimes(mtimes(    err_xk.T(), p.QX),     err_xk)
-             + mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk)
+        obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk)
              + mtimes(mtimes(err_thetak.T(), p.QTheta), err_thetak)
              + mtimes(mtimes(    err_wk.T(), p.QW),     err_wk)
              + mtimes(mtimes(       cfk.T(), p.QC),     cfk)
              + mtimes(mtimes(       efk.T(), p.QC),     efk);
+        if (k == pred_hor){
+            obj += mtimes(mtimes(   err_xk.T(), p.QX),    err_xk);
+        }
     }
     // auto terminal_err = x(all, pred_hor) - EigenVectorTodm(xk_des.col(pred_hor));
     // auto weight = DM::eye(2) * 40;
@@ -107,6 +111,12 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         // constraint for the theta
         opti.subject_to(-p.theta_max <= theta(all, k+1) <= p.theta_max);
 
+        if (k == pred_hor-1){
+            // terminal constraint
+            opti.subject_to( xd(1, k+1) >= p.min_yspeed );
+        }
+
+
     }
 
     // set the initial guess
@@ -132,12 +142,13 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     opti.set_initial(ef, ef_init);
 
     Dict p_opts; p_opts["expand"] = true;
-    //p_opts["print_time"] = 0;
-    Dict s_opts;      //s_opts["max_iter"] = p.max_iter;
-    // s_opts["print_level"] = 0;
-    // s_opts["sb"] = "yes";
-    
+    p_opts["print_time"] = 0;
+    Dict s_opts;      
+    s_opts["max_iter"] = p.max_iter;
+    s_opts["print_level"] = 0;
+    s_opts["sb"] = "yes";
     opti.solver("ipopt", p_opts, s_opts);
+    
     // string solverName; 
     // solverName = "gurobi"; 
     //s_opts["TimeLimit"] = 0.4;
@@ -148,12 +159,11 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
         double average_cost = c/pred_hor;
+        log.reward =  (1.0/average_cost ) * 0.1; 
         // cout<<"average_cost "<<average_cost<<endl;
-        log.reward =  (1.0/average_cost - 1.0/35.0) * 35.0; 
-        // cout<< "the cost "<< c <<endl;
+        // cout<<"the cost "<< c <<endl;
         // cout<<"pred_hor "<<pred_hor<<endl;
         // cout<<"reward "<<log.reward<<endl;
-        //cout<< "the reward "<< log.reward <<endl;
     }
     catch (CasadiException) {
     // Block of code to handle errors
@@ -170,13 +180,13 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
     log.cf = opti.debug().value(cf);
     log.ef = opti.debug().value(ef);
 
-    cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
-    cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
-    cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
-    cout<< "w \n" <<dmToEigen(log.w)<<endl;
-    cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
-    cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
-    cout<< "contact loc \n" << cdata.cl<<   endl;
+    // cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
+    // cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
+    // cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
+    // cout<< "w \n" <<dmToEigen(log.w)<<endl;
+    // cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
+    // cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
+    // cout<< "contact loc \n" << cdata.cl<<   endl;
 
     return log;
 }

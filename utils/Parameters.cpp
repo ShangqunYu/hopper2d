@@ -48,27 +48,28 @@ Parameters::Parameters()
     opt_dt = 0.08;
 
     //cost weight
-    QX  = DM::eye(2) * 10; QX(0,0) = 0;
-    QXd = DM::eye(2) * 10;
+    // ignore the error of X on x  and y
+    QX  = DM::eye(2) * 50; QX(0,0) = 0; 
+    // ignore the error of xd on y
+    QXd = DM::eye(2) * 10; QXd(1,1) = 0;
     QTheta =  20;
     QW = 20;
     QC = DM::eye(2) * 0.000001;
 
-    // xk_des  = DM::zeros(2,1); xk_des(1,0)  = 0.8;
     xdk_des = DM::zeros(2,1); xdk_des(0,0) = 1;
     thetak_des = 0;
     wk_des = 0;
     fpose = DM({0, -init_state(1)});
     // upper_bdbox = DM({0.156, 0.156});
     // lower_bdbox = DM({-0.156, -0.078});
-    // upper_bdbox = DM({0.4, 0.3});
-    // lower_bdbox = DM({-0.4, -0.3});
-    upper_bdbox = DM({10, 10});
-    lower_bdbox = DM({-10, -10});    
+    upper_bdbox = DM({0.4, 0.3});
+    lower_bdbox = DM({-0.4, -0.3});
+    // upper_bdbox = DM({10, 10});
+    // lower_bdbox = DM({-10, -10});    
     theta_max = 1.0 / 6 * M_PI;
     //output theta_max
     max_react_force = 200;
     gravity_opti = DM({0, -gravity});
     max_iter = 100;
-
+    min_yspeed = -0.5;
 }
