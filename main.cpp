@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
     hopper2dOptiEnv env;
     env.reset();
-    State2d s = env.step(0.2, 0.2, 0.2);
+    State2d s = env.step(0.9, 0.3, 0.5);
     cout<<"done: "<<env.log.done<<endl;
     
     env.render();
@@ -29,16 +29,16 @@ int main(int argc, char* argv[]){
     cout<<"state w: "<<s.w<<endl;
     cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
     cout<<"reward " << env.s.reward << endl;
-    
-    s = env.step(0.2, 0.2, 0.2);
-    env.render();
-    s = env.step(0.2, 0.2, 0.2);
-    env.render();
-    s = env.step(0.2, 0.2, 0.2);
-    env.render();
-    s = env.step(0.2, 0.2, 0.2);
-    env.render();            
     exit(0);
+    s = env.step(1.2, 0.5, 0.5);
+    env.render();
+    s = env.step(1.2, 0.5, 0.5);
+    env.render();
+    s = env.step(1.2, 0.5, 0.5);
+    env.render();
+    s = env.step(1.2, 0.5, 0.5);
+    env.render();            
+    
     cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
     cout<<"reward " << env.s.reward << endl;
     

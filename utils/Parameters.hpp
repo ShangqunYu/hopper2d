@@ -47,7 +47,9 @@ class Parameters {
 
         //cost weight
         DM QX;   //position
+        DM QX_terminal;  // terminal position
         DM QXd;  //velocity
+        DM QXd_terminal;  // terminal velocity
         double QTheta;   //orientation
         double QW;   //angular velocity
         DM QC;   //control cost
@@ -67,5 +69,5 @@ class Parameters {
         DM gravity_opti;
         int max_iter;
 
-        double min_yspeed;
+        double min_dist;
 };

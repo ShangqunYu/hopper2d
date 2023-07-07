@@ -48,12 +48,17 @@ Parameters::Parameters()
     opt_dt = 0.08;
 
     //cost weight
-    // ignore the error of X on x  and y
-    QX  = DM::eye(2) * 50; QX(0,0) = 0; 
-    // ignore the error of xd on y
-    QXd = DM::eye(2) * 10; QXd(1,1) = 0;
+    
+    QX  = DM::eye(2) * 50; QX(0,0) = 0;  // ignore the error of X on x  and y
+    QX_terminal = DM::eye(2) * 50;
+
+    QXd = DM::eye(2) * 10; QXd(1,1) = 0; // ignore the error of xd on y
+    QXd_terminal = DM::eye(2) * 50;
+
     QTheta =  20;
+
     QW = 20;
+
     QC = DM::eye(2) * 0.000001;
 
     xdk_des = DM::zeros(2,1); xdk_des(0,0) = 1;
@@ -71,5 +76,5 @@ Parameters::Parameters()
     max_react_force = 200;
     gravity_opti = DM({0, -gravity});
     max_iter = 100;
-    min_yspeed = -0.5;
+    min_dist = 0.5;
 }

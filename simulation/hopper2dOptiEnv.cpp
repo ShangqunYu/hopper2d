@@ -11,7 +11,8 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
     
     int contact_hor = floor(contact_dts / p.opt_dt);
     int flight_hor = floor(flight_dts / p.opt_dt);
-    pred_hor = contact_hor + flight_hor + 1;  // +1 is for the contact after flight
+    pred_hor = contact_hor + flight_hor + contact_hor;  // +1 is for the contact after flight
+    cout<<"pred_hor: "<<pred_hor<<endl;
     contact_data cdata = get_contact_data(contact_loc, contact_hor , flight_hor);
 
     MatrixXd xk_des = get_desireX();
@@ -99,9 +100,16 @@ contact_data hopper2dOptiEnv::get_contact_data(double contact_loc, int contact_h
     for (int i=0; i<flight_hor; i++){
         cdata.cs.push_back(0);
     }
+
+    // push contact_hor ones into the contact data
+    for (int i=0; i<contact_hor; i++){
+        cdata.cs.push_back(1);
+        cdata.cl(0, i+contact_hor+flight_hor) = s.curr_contact_loc + contact_loc;
+    }
+
     // push the 1 contact after flight
-    cdata.cs.push_back(1); 
-    cdata.cl(0, pred_hor-1) = s.curr_contact_loc + contact_loc;
+    // cdata.cs.push_back(1); 
+    // cdata.cl(0, pred_hor-1) = s.curr_contact_loc + contact_loc;
     // cdata.cl(0, pred_hor-1) = s.x(0) + contact_loc;
 
     return cdata;
@@ -115,7 +123,10 @@ MatrixXd hopper2dOptiEnv::get_desireX(){
         // current we just want to maintain the same height as the initial state, may be it's not ideal for a hopping robot. 
         xk_des(1, i) =  p.init_state(1);
     }
-    xk_des(0, pred_hor) = 0;
+    double dist = pred_hor * p.opt_dt * 1.0;
+    xk_des(0, pred_hor) = s.x(0) +  max(p.min_dist, dist );
+    xk_des(1, pred_hor) = p.init_state(1) - 0.2;
+    cout<<"xk_des(1, pred_hor) "<< xk_des(1, pred_hor)<<endl;
     return xk_des;
 }
 

@@ -40,13 +40,18 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         auto err_thetak = thetak - p.thetak_des;
         auto err_wk     = wk     - p.wk_des;
 
-        obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk)
-             + mtimes(mtimes(err_thetak.T(), p.QTheta), err_thetak)
-             + mtimes(mtimes(    err_wk.T(), p.QW),     err_wk)
-             + mtimes(mtimes(       cfk.T(), p.QC),     cfk)
-             + mtimes(mtimes(       efk.T(), p.QC),     efk);
-        if (k == pred_hor){
-            obj += mtimes(mtimes(   err_xk.T(), p.QX),    err_xk);
+        obj += mtimes(mtimes(err_thetak.T(), p.QTheta), err_thetak)   // theta error
+            +  mtimes(mtimes(    err_wk.T(), p.QW    ),     err_wk)       // w error
+            +  mtimes(mtimes(       cfk.T(), p.QC    ),     cfk)          // contact force
+            +  mtimes(mtimes(       efk.T(), p.QC    ),     efk);         // contact force
+
+        if (k < pred_hor) {
+            obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk);
+
+        }else{
+            obj += mtimes(mtimes(  err_xk.T(), p.QX_terminal ),    err_xk)
+                 + mtimes(mtimes( err_xdk.T(), p.QXd_terminal),    err_xdk);
+
         }
     }
     // auto terminal_err = x(all, pred_hor) - EigenVectorTodm(xk_des.col(pred_hor));
@@ -111,10 +116,10 @@ logdata optimize2d(Parameters p, State2d s, contact_data cdata, MatrixXd xk_des)
         // constraint for the theta
         opti.subject_to(-p.theta_max <= theta(all, k+1) <= p.theta_max);
 
-        if (k == pred_hor-1){
-            // terminal constraint
-            opti.subject_to( xd(1, k+1) >= p.min_yspeed );
-        }
+        // if (k == pred_hor-1){
+        //     // terminal constraint
+        //     opti.subject_to( xd(1, k+1) >= p.min_yspeed );
+        // }
 
 
     }
