@@ -12,7 +12,7 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
     int contact_hor = floor(contact_dts / p.opt_dt);
     int flight_hor = floor(flight_dts / p.opt_dt);
     pred_hor = contact_hor + flight_hor + contact_hor;  // +1 is for the contact after flight
-    cout<<"pred_hor: "<<pred_hor<<endl;
+    // cout<<"pred_hor: "<<pred_hor<<endl;
     contact_data cdata = get_contact_data(contact_loc, contact_hor , flight_hor);
 
     MatrixXd xk_des = get_desireX();
@@ -40,8 +40,8 @@ State2d hopper2dOptiEnv::step(double contact_loc, double contact_dts, double fli
         double swing_vel_penalty = exp((swing_vel -2.4) * 4.5);
         // cout<<"swing_vel_penalty: "<<swing_vel_penalty<<endl;
         double survival_reward = 0.5;
-        s.reward = contact_loc* 0.5 + survival_reward + contact_hor*0.1 + flight_hor*0.1;
-        // s.reward = log.reward - swing_vel_penalty + survival_reward; // reward is from the optimization
+        // s.reward = contact_loc* 0.5 + survival_reward + contact_hor*0.1 + flight_hor*0.1;
+        s.reward = log.reward  + survival_reward; // reward is from the optimization
         // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
         s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1);  // absolute location of the contact
     }
@@ -126,7 +126,7 @@ MatrixXd hopper2dOptiEnv::get_desireX(){
     double dist = pred_hor * p.opt_dt * 1.0;
     xk_des(0, pred_hor) = s.x(0) +  max(p.min_dist, dist );
     xk_des(1, pred_hor) = p.init_state(1) - 0.2;
-    cout<<"xk_des(1, pred_hor) "<< xk_des(1, pred_hor)<<endl;
+    // cout<<"xk_des(1, pred_hor) "<< xk_des(1, pred_hor)<<endl;
     return xk_des;
 }
 

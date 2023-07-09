@@ -40,7 +40,7 @@ class Hopper2dOptiEnv(gym.Env):
 
     def normalize_action(self, action):
         action[0] =  action[0] + 1       # range from 0 to 2
-        action[1] =  action[1] * 0.25 + 0.55 # range from 0.3 to 0.8
+        action[1] =  action[1] * 0.2 + 0.4 # range from 0.2 to 0.6
         action[2] =  action[2] * 0.25 + 0.55 # range from 0.3 to 0.8
         return action
 
