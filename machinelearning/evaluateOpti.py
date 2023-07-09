@@ -9,7 +9,7 @@ gym.envs.register(
     )
 env = gym.make('Hopper2dOptiEnv-v0')
 obs,_ = env.reset()
-model = PPO.load("./logs/optijumpJuly07/best_model.zip", print_system_info=True)
+model = SAC.load("./logs/optijumpJuly08/best_model.zip", print_system_info=True)
 done = False
 count = 0
 totalReward = 0
@@ -18,7 +18,7 @@ while not done:
      act, _ = model.predict(obs, deterministic=True)
      action = np.array([0.0, 0.0, 0.0])
      action[0] =  act[0] + 1       # range from 0 to 2
-     action[1] =  act[1] * 0.25 + 0.55
+     action[1] =  act[1] * 0.2 + 0.4 
      action[2] =  act[2] * 0.25 + 0.55
      breakpoint()
      obs, reward, done, _, info = env.step(act)
