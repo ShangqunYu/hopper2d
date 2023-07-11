@@ -2,10 +2,10 @@
 #include <iostream>  
 #include <typeinfo> 
 
-logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_des){
+loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des){
     int pred_hor = cdata.rcs.size();
     // store logging information
-    logdata log; 
+    loco_logdata log; 
     log.cd = cdata;
    
     //creating the optimization variables
@@ -63,6 +63,7 @@ logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_
     // auto terminal_err = x(all, pred_hor) - EigenVectorTodm(xk_des.col(pred_hor));
     // auto weight = DM::eye(2) * 40;
     // obj += mtimes(mtimes( terminal_err.T(), weight),  terminal_err);
+
     opti.minimize(obj);
 
     // initial constraint
@@ -150,6 +151,7 @@ logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_
 
     }
 
+
     // set the initial guess
     // 1. position
     opti.set_initial(x,     DM::repmat(EigenVectorTodm(s.x),  1, pred_hor+1));
@@ -160,14 +162,16 @@ logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_
     // 4. angular velocity
     opti.set_initial(w,     DM::repmat(DM(s.w),               1, pred_hor+1));
 
+
     // set the initial guess for the reaction force
     DM rtoef_init = DM::zeros(2, pred_hor);
     DM rheelf_init = DM::zeros(2, pred_hor);
     DM ltoef_init = DM::zeros(2, pred_hor);
     DM lheelf_init = DM::zeros(2, pred_hor);
     for (int i = 0; i < pred_hor; i++){
+        // cout<<i<<endl;
         if (cdata.rcs[i] == 1 && cdata.lcs[i] == 1){
-            rtoef_init(1, i) = rheelf_init(1, i)=ltoef_init=lheelf_init= -p.M * p.gravity_opti(1) / 4;
+            rtoef_init(1, i) = rheelf_init(1, i)=ltoef_init(1, i) =lheelf_init(1, i) = -p.M * p.gravity_opti(1) / 4;
         } else if (cdata.rcs[i] == 1){
             rtoef_init(1, i) = rheelf_init(1, i) = -p.M * p.gravity_opti(1) / 2;
         } else if (cdata.lcs[i] == 1){
@@ -175,6 +179,8 @@ logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_
         }
 
     }
+
+    
 
     opti.set_initial(rtoef, rtoef_init);
     opti.set_initial(rheelf, rheelf_init);

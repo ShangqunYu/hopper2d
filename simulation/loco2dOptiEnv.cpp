@@ -4,7 +4,7 @@
 loco2dOptiEnv::loco2dOptiEnv(){
 
 }
-
+                            
 State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r_flight_dts, double l_contact_loc, double l_flight_dts, double l_contact_dts){
 
     // calculate the horizon based on dts
@@ -18,16 +18,20 @@ State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r
     int l_contact_hor = floor(l_contact_dts / p.opt_dt);
 
     // cout<<"pred_hor: "<<pred_hor<<endl;
-    contact_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
+    // cout<<"r_contact_hor: "<<r_contact_hor<<endl;
+    // cout<<"r_flight_hor: "<<r_flight_hor<<endl;
+    // cout<<"l_flight_hor: "<<l_flight_hor<<endl;
+    // cout<<"l_contact_hor: "<<l_contact_hor<<endl;
+
+    loco_con_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
 
     MatrixXd xk_des = get_desireX();
-
-    // cout<<"xk_des: \n"<<xk_des<<endl;
-    double swing_vel = contact_loc / flight_dts;
+    // cout<<"xk_des: "<<xk_des<<endl;
     log = locooptimize2d(p, s, cdata, xk_des);
-    if (log.done || num_steps >100 || swing_vel > 3){
+    // cout<<"log.x: "<<log.x<<endl;
+    if (log.done || num_steps >100){
         initstate();
-        if (log.done || swing_vel > 3){
+        if (log.done){
             s.reward = -10;
         }else{
             s.reward = 0;
@@ -42,13 +46,12 @@ State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r
         s.xd    = dmToEigen(xd);
         s.theta = log.theta(0,log.theta.size2()-1).scalar();
         s.w     = log.w(0,log.w.size2()-1).scalar();
-        double swing_vel_penalty = exp((swing_vel -2.4) * 4.5);
-        // cout<<"swing_vel_penalty: "<<swing_vel_penalty<<endl;
+
         double survival_reward = 0.5;
         // s.reward = contact_loc* 0.5 + survival_reward + contact_hor*0.1 + flight_hor*0.1;
         s.reward = log.reward  + survival_reward; // reward is from the optimization
         // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
-        s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1);  // absolute location of the contact
+        s.curr_contact_loc = log.cd.rcl(0,log.cd.rcl.cols()-1);  // absolute location of the contact
     }
     num_steps++;
     
@@ -91,8 +94,8 @@ void loco2dOptiEnv::initstate(){
 }
 
 
-contact_data loco2dOptiEnv::get_contact_data(double r_contact_loc, double r_contact_hor, double r_flight_hor, double l_contact_loc, double l_flight_hor, double l_contact_hor){
-    contact_data cdata;
+loco_con_data loco2dOptiEnv::get_contact_data(double r_contact_loc, int r_contact_hor, int r_flight_hor, double l_contact_loc, int l_flight_hor, int l_contact_hor){
+    loco_con_data cdata;
     cdata.rcl = MatrixXd::Zero(2, pred_hor);
     cdata.lcl = MatrixXd::Zero(2, pred_hor);
 
@@ -114,6 +117,9 @@ contact_data loco2dOptiEnv::get_contact_data(double r_contact_loc, double r_cont
         cdata.rcl(0, i+r_contact_hor+r_flight_hor) = s.curr_contact_loc + r_contact_loc;
     }
 
+    //output size of cdata.rcl
+    // cout<<"cdata.rcl.cols(): "<<cdata.rcl.cols()<<endl;
+
     // working onf the left foot
     // push l_flight_hor zeros into the contact data
     for (int i=0; i<l_flight_hor; i++){
@@ -131,6 +137,9 @@ contact_data loco2dOptiEnv::get_contact_data(double r_contact_loc, double r_cont
     for (int i=0; i<pred_hor-l_flight_hor-l_contact_hor; i++){
         cdata.lcs.push_back(0);
     }
+
+    // cout<< "rcl \n"<< cdata.rcl<<endl;
+    // cout<< "lcl \n"<< cdata.lcl<<endl;
 
     return cdata;
 }
@@ -154,7 +163,7 @@ MatrixXd loco2dOptiEnv::get_desireX(){
 
 
 void loco2dOptiEnv::render(){
-    animator.animate(log);
+    animator.animate_loco(log);
 }
 
 

@@ -7,18 +7,18 @@
 using namespace std;
 using namespace casadi;
 
-struct contact_data
+struct loco_con_data
 {
     Eigen::MatrixXd  rcl;  // location of joint between right foot and shank
     Eigen::MatrixXd  lcl;  // location of joint between left foot and shank
     vector<int>  rcs;  // contact status of right foot
     vector<int>  lcs;  // contact status of left foot
 };
-struct logdata
+struct loco_logdata
 {
     bool done;
     double reward;
-    contact_data cd;
+    loco_con_data cd;
     DM x;
     DM xd;
     DM theta;
@@ -28,4 +28,4 @@ struct logdata
     DM ltoef;
     DM lheelf;
 };
-logdata locooptimize2d(LocoParams p, State2d s, contact_data cdata, MatrixXd xk_des);
+loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des);
