@@ -26,7 +26,7 @@ LocoParams::LocoParams()
     init_state = Eigen::VectorXd::Zero(dim);
     init_state << 0.0, 1, 0.0, M_PI/6, -M_PI/3, M_PI/6, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0; 
     init_state(1) = l0*cos(init_state(3)) + l1*cos(init_state(3)+init_state(4)) + ground_height + lbody/2;
-
+    // std::cout<<"init_state: "<<init_state<<std::endl;
     kp = 15;
     kd = 1;
 
@@ -67,8 +67,8 @@ LocoParams::LocoParams()
     fpose = DM({0, -init_state(1)});
     // upper_bdbox = DM({0.156, 0.156});
     // lower_bdbox = DM({-0.156, -0.078});
-    upper_bdbox = DM({0.4, 0.3});
-    lower_bdbox = DM({-0.4, -0.3});
+    upper_bdbox = DM({0.35, 0.3});
+    lower_bdbox = DM({-0.35, -0.3});
     // upper_bdbox = DM({10, 10});
     // lower_bdbox = DM({-10, -10});    
     theta_max = 1.0 / 6 * M_PI;
@@ -77,4 +77,6 @@ LocoParams::LocoParams()
     gravity_opti = DM({0, -gravity});
     max_iter = 100;
     min_dist = 0.5;
+
+    terrain_hor = 10;
 }

@@ -20,6 +20,10 @@ public class loco2dopti_subscribe : MonoBehaviour
 
     public static float[] left_foot_pos = new float[3];
 
+    public static double[] floor = new double[500];
+    public static GameObject[] boxes;
+    public static GameObject backbox;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +31,17 @@ public class loco2dopti_subscribe : MonoBehaviour
         this.torso = this.transform.GetChild(0);
         this.right_link_foot = this.transform.GetChild(1);
         this.left_link_foot = this.transform.GetChild(2);
+
+        boxes = new GameObject[500]; // Change the size as per your requirement
+        backbox = new GameObject();
+        backbox.transform.position = new Vector3(-5f, -0.05f, 0); // Change the position as per your requirement
+        backbox.transform.localScale = new Vector3(10f, 0.1f, 2f); // Change the scale as per your requirement
+
+        for (int i = 0; i < boxes.Length; i++) {
+            boxes[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, -1.05f, 0); // Change the position as per your requirement
+            boxes[i].transform.localScale = new Vector3(0.25f, 0.1f, 2f); // Change the scale as per your requirement
+        }
 
     }
 
@@ -40,7 +55,16 @@ public class loco2dopti_subscribe : MonoBehaviour
         this.right_link_foot.localRotation = Quaternion.Euler(0, 0, (float) 90);
 
         this.left_link_foot.localPosition = new Vector3(left_foot_pos[0],left_foot_pos[1],0);
-        this.left_link_foot.localRotation = Quaternion.Euler(0, 0, (float) 90);       
+        this.left_link_foot.localRotation = Quaternion.Euler(0, 0, (float) 90);  
+
+        for (int i = 0; i < boxes.Length; i++) {
+            if (floor[i]==1){
+                boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, - 0.05f, 0); 
+            } else {
+                boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, - 1.05f, 0); 
+            }
+            
+        }
     }
 
 
@@ -80,8 +104,18 @@ public class loco2dopti_subscribe : MonoBehaviour
                 
                 left_foot_pos[2] = 0;
 
+            }
+
+            if (channel == "terrain") {
+                LCMTypes.terrain_lcmt msg = new LCMTypes.terrain_lcmt(dins);
+                String message = "Received message of the type terrain:\n ";
+                Debug.Log (message);
+                for(int i = 0; i<500; ++i){
+                    floor[i] = msg.floor[i];
+                }
 
             }
+
         }
     }
     bool running = false;

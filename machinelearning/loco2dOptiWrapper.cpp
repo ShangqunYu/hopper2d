@@ -27,8 +27,11 @@ class Loco2dOptiWrapper {
                 + env.s.xd.size()         // xy vel of the body
                 + 1                       // theta
                 + 1                      // theta dot
+                + env.p.terrain_hor      // terrain
             );
-            obs << env.s.x(0) - env.s.curr_contact_loc, env.s.x(1), env.s.xd, env.s.theta, env.s.w;
+            VectorXd terrain_obs = env.get_terrain_obs();
+
+            obs << env.s.x(0) - env.s.curr_contact_loc, env.s.x(1), env.s.xd, env.s.theta, env.s.w, terrain_obs;
             return obs;
         }
 

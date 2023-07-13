@@ -25,5 +25,12 @@ class loco2dOptiEnv{
         double prev_x;
         double calc_reward();
 
+        VectorXd terrain;
+        void generate_terrain();
+        bool checkinthepit(double x);
+        bool terrain_sent = false;
+
+        VectorXd get_terrain_obs();
+
 
 };

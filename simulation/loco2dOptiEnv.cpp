@@ -23,6 +23,18 @@ State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r
     // cout<<"l_flight_hor: "<<l_flight_hor<<endl;
     // cout<<"l_contact_hor: "<<l_contact_hor<<endl;
 
+    bool r_in_pit = checkinthepit(r_contact_loc + s.curr_contact_loc);
+    bool l_in_pit = checkinthepit(l_contact_loc + s.curr_contact_loc);
+
+    bool in_pit = r_in_pit || l_in_pit;
+
+    if (in_pit){
+        initstate();
+        s.reward = -10;
+        log.done = true;
+        return s;
+    }
+
     loco_con_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
 
     MatrixXd xk_des = get_desireX();
@@ -64,6 +76,7 @@ State2d loco2dOptiEnv::reset(){
     log.done = false;
     pred_hor = 0;
     prev_x = 0;
+    generate_terrain();
     return s;
 }
 
@@ -159,10 +172,51 @@ MatrixXd loco2dOptiEnv::get_desireX(){
     return xk_des;
 }
 
+void loco2dOptiEnv::generate_terrain(){
+    // first of all set everything to be 1, which means flat ground
+    terrain = VectorXd::Ones(1000);
+    // then randomly generate some pits, every 4 meters there is a pit
+    srand ( time(NULL) );
+
+    for (int i = 4; i<900; i+=16){
+        int pit = 2 + rand() % 13 + i;
+        terrain(pit) = 0;
+        terrain(pit+1) = 0;
+    }
+
+    terrain_sent = false;
+
+}
+
+bool loco2dOptiEnv::checkinthepit(double x){
+    double dist = (x<0)? 0: x;
+    int idx = (int) (dist / 0.25);
+    if (terrain(idx) == 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+VectorXd loco2dOptiEnv::get_terrain_obs(){
+    double x = (s.x(0)<0)?0:s.x(0);
+    int idx = (int)floor(x/0.25);
+    VectorXd obs(p.terrain_hor);
+    for (int i=0; i<p.terrain_hor; i++){
+        obs(i) = terrain[idx+1+i];
+    }
+    return obs;
+}
+
 
 
 
 void loco2dOptiEnv::render(){
+    if (!terrain_sent){
+        animator.send_terrain(terrain);
+        terrain_sent = true;
+    }
     animator.animate_loco(log);
 }
 

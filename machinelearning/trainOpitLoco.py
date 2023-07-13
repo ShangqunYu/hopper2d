@@ -36,12 +36,12 @@ if __name__ == "__main__":
     # env = gym.make('Hopper2dOptiEnv-v0')
     # obs = env.reset()
     # breakpoint()
-    LOG_PATH = "./logs/optijumpJuly11"
+    LOG_PATH = "./logs/optijumpJuly13"
     num_cpu = 12  # Number of processes to use
     env = SubprocVecEnv([make_env('Loco2dOptiEnv-v0', i) for i in range(num_cpu)])
     env = VecMonitor(env)
     checkpoint_callback = CheckpointCallback(
-      save_freq=40000,
+      save_freq=10000,
       save_path=LOG_PATH,
       name_prefix="opti"
     )
@@ -57,5 +57,5 @@ if __name__ == "__main__":
     model = SAC("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
     # model = PPO("MlpPolicy", env, verbose=1, tensorboard_log=LOG_PATH)
 
-    model.learn(total_timesteps=3000000, callback=[checkpoint_callback, eval_callback])
+    model.learn(total_timesteps=1000000, callback=[checkpoint_callback, eval_callback])
     model.save(LOG_PATH + "/model")

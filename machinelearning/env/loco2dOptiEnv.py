@@ -14,7 +14,7 @@ class Loco2dOptiEnv(gym.Env):
         act_highbd = np.array([ 1,  1,  1,  1,  1,  1],dtype=np.float32)
 
         self.action_space = spaces.Box(low=act_lowbd, high=act_highbd, dtype=np.float32)
-        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(6,), dtype=np.float64)
+        self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(16,), dtype=np.float64)
 
 
     def step(self, action):
@@ -44,7 +44,7 @@ class Loco2dOptiEnv(gym.Env):
         action[2] =  action[2] * 0.25 + 0.55 # range from 0.3 to 0.8
         action[3] =  action[3] * 0.4  + 0.4  # range from 0.0 to 0.8
         action[4] =  action[4] * 0.2  + 0.3  # range from 0.0 to 0.8
-        action[5] =  action[5] * 0.25  + 0.55  # range from 0.3 to 0.8
+        action[5] =  action[5] * 0.3  + 0.5  # range from 0.2 to 0.8
 
         # print(action)
         return action

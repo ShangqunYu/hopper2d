@@ -70,4 +70,6 @@ class LocoParams {
         int max_iter;
 
         double min_dist;
+
+        int terrain_hor;
 };

@@ -9,6 +9,7 @@
 #include "../utils/eigenHelper.hpp"
 #include "../optimization/optimize2d.hpp"
 #include "../optimization/locooptimize2d.hpp"
+#include "../lcm-types/cpp/terrain_lcmt.hpp"
 #include <hopper2dOpti_lcmt.hpp>
 #include <loco2dOpti_lcmt.hpp>
 #include <lcm/lcm-cpp.hpp>
@@ -26,6 +27,7 @@ class AnimatorOpti{
         void send_message_loco(double x, double y, double theta, double r_contact_loc, double r_in_contact, double l_contact_loc, double l_in_contact); 
 
         lcm::LCM _lcm_cart;
+        void send_terrain(VectorXd terrain);
 };
 
 

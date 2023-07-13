@@ -60,3 +60,12 @@ void AnimatorOpti::send_message_loco(double x, double y, double theta, double r_
     msg.l_under_contact = l_in_contact;
     _lcm_cart.publish("loco2dOpti", &msg);
 }
+
+
+void AnimatorOpti::send_terrain(VectorXd terrain){
+    terrain_lcmt msg;
+    for (int i = 0; i < terrain.size(); i++){
+        msg.floor[i] = terrain[i];
+    }
+    _lcm_cart.publish("terrain", &msg);
+}
