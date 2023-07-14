@@ -59,7 +59,7 @@ LocoParams::LocoParams()
 
     QW = 20;
 
-    QC = DM::eye(2) * 0.000001;
+    QC = DM::eye(2) * 0.000001;  // may be to add more weight on the tengential direction
 
     xdk_des = DM::zeros(2,1); xdk_des(0,0) = 1;
     thetak_des = 0;

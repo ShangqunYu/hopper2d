@@ -29,3 +29,6 @@ struct loco_logdata
     DM lheelf;
 };
 loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des);
+
+
+void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor);

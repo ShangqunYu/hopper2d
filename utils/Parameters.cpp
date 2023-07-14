@@ -45,7 +45,7 @@ Parameters::Parameters()
     time_skipping = 5;
 
     //hypperparameters for optimization
-    opt_dt = 0.08;
+    opt_dt = 0.04;
 
     //cost weight
     

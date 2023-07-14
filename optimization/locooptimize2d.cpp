@@ -205,7 +205,7 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
         double average_cost = c/pred_hor;
-        log.reward =  (1.0/average_cost ) * 0.1; 
+        log.reward =  (1.0/average_cost ) * 0.05; 
         // cout<<"average_cost "<<average_cost<<endl;
         // cout<<"the cost "<< c <<endl;
         // cout<<"pred_hor "<<pred_hor<<endl;
@@ -227,13 +227,100 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
     log.rheelf = opti.debug().value(rheelf);
     log.ltoef = opti.debug().value(ltoef);
     log.lheelf = opti.debug().value(lheelf);
+
     // cout<< "log.x \n" <<dmToEigen(log.x)<<endl;
     // cout<< "xd \n" <<dmToEigen(log.xd)<<endl;
     // cout<< "theta \n" <<dmToEigen(log.theta)<<endl;
     // cout<< "w \n" <<dmToEigen(log.w)<<endl;
-    // cout<< "cf \n" <<dmToEigen(log.cf)<<endl;
-    // cout<< "ef \n" <<dmToEigen(log.ef)<<endl;
-    // cout<< "contact loc \n" << cdata.cl<<   endl;
+    // cout<< "rtoef \n" <<dmToEigen(log.rtoef)<<endl;
+    // cout<< "rheelf \n" <<dmToEigen(log.rheelf)<<endl;
+    // cout<< "ltoef \n" <<dmToEigen(log.ltoef)<<endl;
+    // cout<< "lheelf \n" <<dmToEigen(log.lheelf)<<endl;
+
+    // calculate_cost(log, p, xk_des, pred_hor);
 
     return log;
 }
+
+// purely for debugging
+void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor){
+    double obj = 0;
+    double obj_theta = 0;
+    double obj_w = 0;
+    double obj_x_term = 0;
+    double obj_xd_term = 0;
+    double obj_con = 0;
+    double obj_xd = 0; 
+
+    // calculate the cost
+    for (int k = 1; k < pred_hor+1; k++){
+        Vector2d err_xk     = dmToEigen(log.x).col(k) - xk_des.col(k);
+        Vector2d err_xdk    = dmToEigen(log.xd).col(k) - dmToEigen(p.xdk_des);
+        double err_thetak = dmToEigen(log.theta).col(k).value() - p.thetak_des;
+        double err_wk     = dmToEigen(log.w).col(k).value() - p.wk_des;
+        Vector2d rtoefk     = dmToEigen(log.rtoef).col(k-1);
+        Vector2d rheelfk    = dmToEigen(log.rheelf).col(k-1);
+        Vector2d ltoefk     = dmToEigen(log.ltoef).col(k-1);
+        Vector2d lheelfk    = dmToEigen(log.lheelf).col(k-1);
+
+        obj_theta += err_thetak * p.QTheta * err_thetak;
+        obj_w += err_wk * p.QW * err_wk;
+        obj_con += (rtoefk.transpose() * dmToEigen(p.QC) * rtoefk).value()
+                + (rheelfk.transpose() * dmToEigen(p.QC) * rheelfk).value()
+                + (ltoefk.transpose() * dmToEigen(p.QC) * ltoefk).value()
+                + (lheelfk.transpose() * dmToEigen(p.QC) * lheelfk).value();
+
+        if (k < pred_hor){
+            obj_xd += err_xdk.transpose() * dmToEigen(p.QXd) * err_xdk;
+        } 
+        else{
+            obj_x_term  += (err_xk.transpose() * dmToEigen(p.QX_terminal) * err_xk).value();
+            obj_xd_term +=  (err_xdk.transpose() * dmToEigen(p.QXd_terminal) * err_xdk).value();
+
+        }
+    }
+    obj = obj_theta + obj_w + obj_con + obj_xd + obj_x_term + obj_xd_term;
+    cout<<"the total cost is "<<obj<<endl;
+    cout<< "obj_theta "<<obj_theta<<endl;
+    cout<< "obj_w "<<obj_w<<endl;
+    cout<< "obj_con "<<obj_con<<endl;
+    cout<< "obj_xd "<<obj_xd<<endl;
+    cout<< "obj_x_term "<<obj_x_term<<endl;
+    cout<< "obj_xd_term "<<obj_xd_term<<endl;
+
+
+}
+
+
+    // MX obj = 0;
+    // for (int k = 1; k < pred_hor+1; k++){
+    //     auto xk       =  x(all, k);
+    //     auto thetak   =  theta(all, k);
+    //     auto xdk      =  xd(all, k);
+    //     auto wk       =  w(all, k);
+    //     auto rtoefk   =  rtoef(all, k-1);
+    //     auto rheelfk  =  rheelf(all, k-1);
+    //     auto ltoefk   =  ltoef(all, k-1);
+    //     auto lheelfk  =  lheelf(all, k-1);
+    
+    //     auto err_xk     = xk     - EigenVectorTodm(xk_des.col(k));
+    //     auto err_xdk    = xdk    - p.xdk_des;
+    //     auto err_thetak = thetak - p.thetak_des;
+    //     auto err_wk     = wk     - p.wk_des;
+
+    //     obj += mtimes(mtimes(err_thetak.T(), p.QTheta), err_thetak)   // theta error
+    //         +  mtimes(mtimes(    err_wk.T(), p.QW    ),     err_wk)       // w error
+    //         +  mtimes(mtimes(    rtoefk.T(), p.QC    ),     rtoefk)          // contact force
+    //         +  mtimes(mtimes(   rheelfk.T(), p.QC    ),     rheelfk)         // contact force
+    //         +  mtimes(mtimes(    ltoefk.T(), p.QC    ),     ltoefk)          // contact force
+    //         +  mtimes(mtimes(   lheelfk.T(), p.QC    ),     lheelfk);         // contact force
+
+    //     if (k < pred_hor) {
+    //         obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk);
+
+    //     }else{
+    //         obj += mtimes(mtimes(  err_xk.T(), p.QX_terminal ),    err_xk)
+    //              + mtimes(mtimes( err_xdk.T(), p.QXd_terminal),    err_xdk);
+
+    //     }
+    // }

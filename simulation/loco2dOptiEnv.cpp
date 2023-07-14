@@ -36,6 +36,17 @@ State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r
     }
 
     loco_con_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
+    int l_remain_swing_hor = pred_hor - l_flight_hor - l_contact_hor;
+    double swing_penalty = 0;
+    if (l_remain_swing_hor <= 2){
+        swing_penalty = -5;
+    }
+    // cout<<"pred_hor: "<<pred_hor<<endl;
+    // cout<<"l_remain_swing_hor: "<<l_remain_swing_hor<<endl;
+    // cout<<"l_flight_hor: "<<l_flight_hor<<endl;
+    // cout<<"l_contact_hor: "<<l_contact_hor<<endl;
+
+
 
     MatrixXd xk_des = get_desireX();
     // cout<<"xk_des: "<<xk_des<<endl;
@@ -60,8 +71,9 @@ State2d loco2dOptiEnv::step(double r_contact_loc, double r_contact_dts, double r
         s.w     = log.w(0,log.w.size2()-1).scalar();
 
         double survival_reward = 0.5;
+        double vel_reward = exp ( - (s.xd(0) - 1)* (s.xd(0) - 1) / 0.1);
         // s.reward = contact_loc* 0.5 + survival_reward + contact_hor*0.1 + flight_hor*0.1;
-        s.reward = log.reward  + survival_reward; // reward is from the optimization
+        s.reward = log.reward + survival_reward + swing_penalty; // reward is from the optimization
         // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
         s.curr_contact_loc = log.cd.rcl(0,log.cd.rcl.cols()-1);  // absolute location of the contact
     }
@@ -130,10 +142,9 @@ loco_con_data loco2dOptiEnv::get_contact_data(double r_contact_loc, int r_contac
         cdata.rcl(0, i+r_contact_hor+r_flight_hor) = s.curr_contact_loc + r_contact_loc;
     }
 
-    //output size of cdata.rcl
     // cout<<"cdata.rcl.cols(): "<<cdata.rcl.cols()<<endl;
 
-    // working onf the left foot
+    // working on the left foot
     // push l_flight_hor zeros into the contact data
     for (int i=0; i<l_flight_hor; i++){
         cdata.lcs.push_back(0);
@@ -147,12 +158,11 @@ loco_con_data loco2dOptiEnv::get_contact_data(double r_contact_loc, int r_contac
         cdata.lcl(0, i+l_flight_hor) = s.curr_contact_loc + l_contact_loc;
     }
 
-    for (int i=0; i<pred_hor-l_flight_hor-l_contact_hor; i++){
+    int l_swing_hor = pred_hor - l_flight_hor - l_contact_hor;
+
+    for (int i=0; i<l_swing_hor; i++){
         cdata.lcs.push_back(0);
     }
-
-    // cout<< "rcl \n"<< cdata.rcl<<endl;
-    // cout<< "lcl \n"<< cdata.lcl<<endl;
 
     return cdata;
 }

@@ -9,7 +9,7 @@ gym.envs.register(
     )
 env = gym.make('Loco2dOptiEnv-v0')
 obs,_ = env.reset()
-model = SAC.load("./logs/optijumpJuly13/best_model.zip", print_system_info=True)
+model = SAC.load("./logs/optijumpJuly14/best_model.zip", print_system_info=True)
 done = False
 count = 0
 totalReward = 0
