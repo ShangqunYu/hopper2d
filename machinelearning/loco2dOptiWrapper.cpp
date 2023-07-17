@@ -17,7 +17,7 @@ class Loco2dOptiWrapper {
             cout << "Loco2dOptiWrapper destructor" << endl;
         }
         VectorXd step(VectorXd actions) {
-            env.step(actions(0), actions(1), actions(2), actions(3), actions(4), actions(5));
+            env.step(actions(0), actions(1), actions(2), actions(3), actions(4), actions(5), actions(6));
             return get_obs();
         }
 

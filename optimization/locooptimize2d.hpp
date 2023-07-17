@@ -28,7 +28,7 @@ struct loco_logdata
     DM ltoef;
     DM lheelf;
 };
-loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des);
+loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des, double desired_vel);
 
 
-void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor);
+void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor, DM xdk_des);

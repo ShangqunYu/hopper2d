@@ -10,8 +10,8 @@ import math
 class Loco2dOptiEnv(gym.Env):
     def __init__(self):
         self.w = Loco2dOptiWrapper()
-        act_lowbd =  np.array([-1, -1, -1, -1, -1, -1],dtype=np.float32)
-        act_highbd = np.array([ 1,  1,  1,  1,  1,  1],dtype=np.float32)
+        act_lowbd =  np.array([-1, -1, -1, -1, -1, -1, -1],dtype=np.float32)
+        act_highbd = np.array([ 1,  1,  1,  1,  1,  1,  1],dtype=np.float32)
 
         self.action_space = spaces.Box(low=act_lowbd, high=act_highbd, dtype=np.float32)
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(16,), dtype=np.float64)
@@ -39,12 +39,13 @@ class Loco2dOptiEnv(gym.Env):
         pass
 
     def normalize_action(self, action):
-        action[0] =  action[0] + 1       # range from 0 to 2
-        action[1] =  action[1] * 0.2 + 0.3 # range from 0.1 to 0.5
-        action[2] =  action[2] * 0.25 + 0.55 # range from 0.3 to 0.8
-        action[3] =  action[3] * 0.4  + 0.4  # range from 0.0 to 0.8
-        action[4] =  action[4] * 0.2  + 0.3  # range from 0.0 to 0.8
-        action[5] =  action[5] * 0.3  + 0.5  # range from 0.2 to 0.8
+        action[0] =  action[0] * 0.5 + 1     # desired_vel   range from 0.5 to 1.5
+        action[1] =  action[1] + 1           # r_contact_loc range from 0 to 2    
+        action[2] =  action[2] * 0.2 + 0.3   # r_contact_dts range from 0.1 to 0.5
+        action[3] =  action[3] * 0.25 + 0.55 # r_flight_dts  range from 0.3 to 0.8
+        action[4] =  action[4] * 0.4  + 0.4  # l_contact_loc range from 0.0 to 0.8
+        action[5] =  action[5] * 0.2  + 0.3  # l_flight_dts  range from 0.0 to 0.8
+        action[6] =  action[6] * 0.3  + 0.5  # l_contact_dts range from 0.2 to 0.8
 
         # print(action)
         return action

@@ -2,11 +2,13 @@
 #include <iostream>  
 #include <typeinfo> 
 
-loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des){
+loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, MatrixXd xk_des, double desired_vel){
     int pred_hor = cdata.rcs.size();
     // store logging information
     loco_logdata log; 
     log.cd = cdata;
+
+    DM xdk_des = DM::zeros(2,1); xdk_des(0,0) = desired_vel;
    
     //creating the optimization variables
     //1. ipopt
@@ -40,7 +42,7 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
         auto lheelfk  =  lheelf(all, k-1);
     
         auto err_xk     = xk     - EigenVectorTodm(xk_des.col(k));
-        auto err_xdk    = xdk    - p.xdk_des;
+        auto err_xdk    = xdk    - xdk_des;
         auto err_thetak = thetak - p.thetak_des;
         auto err_wk     = wk     - p.wk_des;
 
@@ -49,7 +51,8 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
             +  mtimes(mtimes(    rtoefk.T(), p.QC    ),     rtoefk)          // contact force
             +  mtimes(mtimes(   rheelfk.T(), p.QC    ),     rheelfk)         // contact force
             +  mtimes(mtimes(    ltoefk.T(), p.QC    ),     ltoefk)          // contact force
-            +  mtimes(mtimes(   lheelfk.T(), p.QC    ),     lheelfk);         // contact force
+            +  mtimes(mtimes(   lheelfk.T(), p.QC    ),     lheelfk)         // contact force
+            +  mtimes(mtimes(    err_xk.T(), p.QX    ),     err_xk);         // x error
 
         if (k < pred_hor) {
             obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk);
@@ -243,7 +246,7 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
 }
 
 // purely for debugging
-void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor){
+void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_hor, DM xdk_des){
     double obj = 0;
     double obj_theta = 0;
     double obj_w = 0;
@@ -255,7 +258,7 @@ void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_h
     // calculate the cost
     for (int k = 1; k < pred_hor+1; k++){
         Vector2d err_xk     = dmToEigen(log.x).col(k) - xk_des.col(k);
-        Vector2d err_xdk    = dmToEigen(log.xd).col(k) - dmToEigen(p.xdk_des);
+        Vector2d err_xdk    = dmToEigen(log.xd).col(k) - dmToEigen(xdk_des);
         double err_thetak = dmToEigen(log.theta).col(k).value() - p.thetak_des;
         double err_wk     = dmToEigen(log.w).col(k).value() - p.wk_des;
         Vector2d rtoefk     = dmToEigen(log.rtoef).col(k-1);
@@ -290,37 +293,3 @@ void calculate_cost(loco_logdata &log, LocoParams p, MatrixXd xk_des, int pred_h
 
 
 }
-
-
-    // MX obj = 0;
-    // for (int k = 1; k < pred_hor+1; k++){
-    //     auto xk       =  x(all, k);
-    //     auto thetak   =  theta(all, k);
-    //     auto xdk      =  xd(all, k);
-    //     auto wk       =  w(all, k);
-    //     auto rtoefk   =  rtoef(all, k-1);
-    //     auto rheelfk  =  rheelf(all, k-1);
-    //     auto ltoefk   =  ltoef(all, k-1);
-    //     auto lheelfk  =  lheelf(all, k-1);
-    
-    //     auto err_xk     = xk     - EigenVectorTodm(xk_des.col(k));
-    //     auto err_xdk    = xdk    - p.xdk_des;
-    //     auto err_thetak = thetak - p.thetak_des;
-    //     auto err_wk     = wk     - p.wk_des;
-
-    //     obj += mtimes(mtimes(err_thetak.T(), p.QTheta), err_thetak)   // theta error
-    //         +  mtimes(mtimes(    err_wk.T(), p.QW    ),     err_wk)       // w error
-    //         +  mtimes(mtimes(    rtoefk.T(), p.QC    ),     rtoefk)          // contact force
-    //         +  mtimes(mtimes(   rheelfk.T(), p.QC    ),     rheelfk)         // contact force
-    //         +  mtimes(mtimes(    ltoefk.T(), p.QC    ),     ltoefk)          // contact force
-    //         +  mtimes(mtimes(   lheelfk.T(), p.QC    ),     lheelfk);         // contact force
-
-    //     if (k < pred_hor) {
-    //         obj += mtimes(mtimes(   err_xdk.T(), p.QXd),    err_xdk);
-
-    //     }else{
-    //         obj += mtimes(mtimes(  err_xk.T(), p.QX_terminal ),    err_xk)
-    //              + mtimes(mtimes( err_xdk.T(), p.QXd_terminal),    err_xdk);
-
-    //     }
-    // }

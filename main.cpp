@@ -19,14 +19,14 @@ int main(int argc, char* argv[]){
 
     loco2dOptiEnv env;
     env.reset();
-    State2d s = env.step(1.2, 0.3, 0.5, 0.4, 0.3, 0.5);
+    // State2d s = env.step(1.2, 0.3, 0.5, 0.4, 0.3, 0.5);
     // cout<<"state x: "<<s.x<<endl;
     // cout<<"state xd: "<<s.xd<<endl;
     // cout<<"state theta: "<<s.theta<<endl;
     // cout<<"state w: "<<s.w<<endl;
     // cout<<"current contact loc: "<<env.s.curr_contact_loc<<endl;
     // cout<<"reward " << env.s.reward << endl;
-    env.render();
+    // env.render();
     // env.step(1.2, 0.3, 0.5, 0.4, 0.3, 0.5);
     // env.render();
     // env.step(1.2, 0.3, 0.5, 0.4, 0.3, 0.5);

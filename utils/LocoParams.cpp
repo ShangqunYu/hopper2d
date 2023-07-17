@@ -49,7 +49,7 @@ LocoParams::LocoParams()
 
     //cost weight
     
-    QX  = DM::eye(2) * 50; QX(0,0) = 0;  // ignore the error of X on x  and y
+    QX  = DM::eye(2) * 5; QX(0,0) = 0;  // ignore the error of X on x  and y
     QX_terminal = DM::eye(2) * 50;
 
     QXd = DM::eye(2) * 10; QXd(1,1) = 0; // ignore the error of xd on y
