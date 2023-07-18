@@ -25,7 +25,7 @@ gym.envs.register(
     )
 env = gym.make('Loco2dOptiEnv-v0')
 obs,_ = env.reset()
-model = SAC.load("./logs/optijumpJuly17/best_model.zip", print_system_info=True)
+model = SAC.load("./logs/optijumpJuly18/best_model.zip", print_system_info=True)
 done = False
 count = 0
 totalReward = 0
@@ -41,7 +41,7 @@ while not done:
     action[5] =  act[5] * 0.2  + 0.3  # l_flight_dts  range from 0.0 to 0.8
     action[6] =  act[6] * 0.3  + 0.5  # l_contact_dts range from 0.2 to 0.8
     visualize_contact(action)
-    breakpoint()
+    # breakpoint()
     obs, reward, done, _, info = env.step(act)
     totalReward += reward
     env.render()

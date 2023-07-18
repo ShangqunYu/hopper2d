@@ -73,7 +73,7 @@ LocoParams::LocoParams()
     // lower_bdbox = DM({-10, -10});    
     theta_max = 1.0 / 6 * M_PI;
     //output theta_max
-    max_react_force = 200;
+    max_react_force = 150;
     gravity_opti = DM({0, -gravity});
     max_iter = 100;
     min_dist = 0.5;

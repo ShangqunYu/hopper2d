@@ -80,7 +80,7 @@ State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_c
 
         // }
         
-        s.reward = vel_reward + swing_penalty + log.reward; // reward is from the optimization
+        s.reward = vel_reward + swing_penalty + log.reward * 0.6; // reward is from the optimization
         // s.curr_contact_loc = log.cd.cl(0,log.cd.cl.cols()-1) - s.x(0); // relative location from contact to the current com
         s.curr_contact_loc = log.cd.rcl(0,log.cd.rcl.cols()-1);  // absolute location of the contact
     }
@@ -193,13 +193,27 @@ MatrixXd loco2dOptiEnv::get_desireX(double desired_vel){
 void loco2dOptiEnv::generate_terrain(){
     // first of all set everything to be 1, which means flat ground
     terrain = VectorXd::Ones(1000);
-    // then randomly generate some pits, every 4 meters there is a pit
-    srand ( time(NULL) );
+    // then randomly generate some pits, 
+    srand (time(NULL));
 
     for (int i = 4; i<900; i+=16){
+
         int pit = 2 + rand() % 13 + i;
-        terrain(pit) = 0;
-        terrain(pit+1) = 0;
+        int choice = rand() % 3;
+        switch (choice){
+            case 0:
+                terrain(pit) = 0;
+                terrain(pit+1) = 0;
+                break;
+            case 1:
+                terrain(pit) = 0;
+                terrain(pit+1) = 0;
+                terrain(pit+2) = 0;
+                break;
+            case 2:
+                terrain(pit) = 0;
+                break;
+        }
     }
 
     terrain_sent = false;
