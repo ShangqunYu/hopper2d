@@ -3,7 +3,7 @@ from env.loco2dOptiEnv import Loco2dOptiEnv
 import numpy as np
 from stable_baselines3 import PPO, SAC
 import math
-
+import torch
 
 def visualize_contact(action):
     dt = 0.08
@@ -26,6 +26,7 @@ gym.envs.register(
 env = gym.make('Loco2dOptiEnv-v0')
 obs,_ = env.reset()
 model = SAC.load("./logs/optijumpJuly18/best_model.zip", print_system_info=True)
+breakpoint()
 done = False
 count = 0
 totalReward = 0
