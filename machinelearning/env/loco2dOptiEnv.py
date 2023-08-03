@@ -43,7 +43,7 @@ class Loco2dOptiEnv(gym.Env):
         action[1] =  action[1] + 1           # r_contact_loc range from 0 to 2    
         action[2] =  action[2] * 0.2 + 0.3   # r_contact_dts range from 0.1 to 0.5
         action[3] =  action[3] * 0.25 + 0.55 # r_flight_dts  range from 0.3 to 0.8
-        action[4] =  action[4] * 0.4  + 0.4  # l_contact_loc range from 0.0 to 0.8
+        action[4] =  action[4] * 0.4  + 0.5  # l_contact_loc range from 0.1 to 0.9
         action[5] =  action[5] * 0.2  + 0.3  # l_flight_dts  range from 0.0 to 0.8
         action[6] =  action[6] * 0.3  + 0.5  # l_contact_dts range from 0.2 to 0.8
 

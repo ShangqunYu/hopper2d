@@ -25,8 +25,10 @@ gym.envs.register(
     )
 env = gym.make('Loco2dOptiEnv-v0')
 obs,_ = env.reset()
-model = SAC.load("./logs/optijumpJuly18/best_model.zip", print_system_info=True)
 breakpoint()
+# model = SAC.load("./logs/optijumpJuly18/opti_960000_steps.zip")
+model = SAC.load("./logs/optijumpAug2/best_model.zip", env=env, custom_objects = {'observation_space': env.observation_space, 'action_space': env.action_space})
+
 done = False
 count = 0
 totalReward = 0

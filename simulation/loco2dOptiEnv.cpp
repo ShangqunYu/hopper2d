@@ -116,7 +116,7 @@ double loco2dOptiEnv::calc_reward(){
 void loco2dOptiEnv::initstate(){
     // add a bit randomness to the state
     Vector2d x(2); x<< (double)rand()/RAND_MAX * 0.01, p.init_state(1)+(double)rand()/RAND_MAX * 0.01;
-    Vector2d xd(2); xd<<(double)rand()/RAND_MAX * 0.01, (double)rand()/RAND_MAX * 0.01;
+    Vector2d xd(2); xd<<(double)rand()/RAND_MAX * 0.01 + 1, (double)rand()/RAND_MAX * 0.01;
     double theta = (double)rand()/RAND_MAX * 0.01;
     double w = (double)rand()/RAND_MAX * 0.01;
     double reward = 0;
@@ -196,7 +196,7 @@ void loco2dOptiEnv::generate_terrain(){
     // then randomly generate some pits, 
     srand (time(NULL));
 
-    for (int i = 4; i<900; i+=16){
+    for (int i = 20; i<900; i+=16){
 
         int pit = 2 + rand() % 13 + i;
         int choice = rand() % 3;

@@ -208,7 +208,7 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
         auto sol = opti.solve();
         double c = opti.debug().value(obj).scalar();
         double average_cost = c/pred_hor;
-        log.reward =  (1.0/average_cost ) * 0.05; 
+        log.reward =  (1.0/average_cost ) * 0.1; 
         // cout<<"average_cost "<<average_cost<<endl;
         // cout<<"the cost "<< c <<endl;
         // cout<<"pred_hor "<<pred_hor<<endl;
