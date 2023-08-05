@@ -81,10 +81,10 @@ loco_logdata locooptimize2d(LocoParams p, State2d s, loco_con_data cdata, Matrix
         auto thetak = theta(all, k);
         auto xdk    =    xd(all, k);
         auto wk     =     w(all, k);
-        auto rtoefk   =  rtoef(all, k-1);
-        auto rheelfk  =  rheelf(all, k-1);
-        auto ltoefk   =  ltoef(all, k-1);
-        auto lheelfk  =  lheelf(all, k-1);
+        auto rtoefk   =  rtoef (all, k);
+        auto rheelfk  =  rheelf(all, k);
+        auto ltoefk   =  ltoef (all, k);
+        auto lheelfk  =  lheelf(all, k);
         // contact location for right toe location
         auto rtoeloc    =    EigenVectorTodm(cdata.rcl.col(k) + p.c_to_b);
         // contact location for point e

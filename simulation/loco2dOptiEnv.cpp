@@ -38,8 +38,11 @@ State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_c
     loco_con_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
     int l_remain_swing_hor = pred_hor - l_flight_hor - l_contact_hor;
     double swing_penalty = 0;
-    if (l_remain_swing_hor <= 3){
-        swing_penalty = -5;
+    if (l_remain_swing_hor <= 3 ){
+        swing_penalty -= 5;
+    }
+    if (l_flight_hor <= 3 &&  l_contact_loc>=0.2){
+        swing_penalty -= 5;
     }
     // cout<<"pred_hor: "<<pred_hor<<endl;
     // cout<<"l_remain_swing_hor: "<<l_remain_swing_hor<<endl;
