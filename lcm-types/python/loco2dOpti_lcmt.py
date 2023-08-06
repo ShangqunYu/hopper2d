@@ -51,6 +51,7 @@ class loco2dOpti_lcmt(object):
         return self
     _decode_one = staticmethod(_decode_one)
 
+    _hash = None
     def _get_hash_recursive(parents):
         if loco2dOpti_lcmt in parents: return 0
         tmphash = (0xef81033a5293f20e) & 0xffffffffffffffff
@@ -64,8 +65,4 @@ class loco2dOpti_lcmt(object):
             loco2dOpti_lcmt._packed_fingerprint = struct.pack(">Q", loco2dOpti_lcmt._get_hash_recursive([]))
         return loco2dOpti_lcmt._packed_fingerprint
     _get_packed_fingerprint = staticmethod(_get_packed_fingerprint)
-
-    def get_hash(self):
-        """Get the LCM hash of the struct"""
-        return struct.unpack(">Q", loco2dOpti_lcmt._get_packed_fingerprint())[0]
 

@@ -15,11 +15,11 @@ public final class terrain_lcmt implements lcm.lcm.LCMEncodable
  
     public terrain_lcmt()
     {
-        floor = new double[1000];
+        floor = new double[1100];
     }
  
     public static final long LCM_FINGERPRINT;
-    public static final long LCM_FINGERPRINT_BASE = 0x73b4665c25b4a6c6L;
+    public static final long LCM_FINGERPRINT_BASE = 0x73b4665c25b5a6c6L;
  
     static {
         LCM_FINGERPRINT = _hashRecursive(new ArrayList<Class<?>>());
@@ -45,7 +45,7 @@ public final class terrain_lcmt implements lcm.lcm.LCMEncodable
  
     public void _encodeRecursive(DataOutput outs) throws IOException
     {
-        for (int a = 0; a < 1000; a++) {
+        for (int a = 0; a < 1100; a++) {
             outs.writeDouble(this.floor[a]); 
         }
  
@@ -73,8 +73,8 @@ public final class terrain_lcmt implements lcm.lcm.LCMEncodable
  
     public void _decodeRecursive(DataInput ins) throws IOException
     {
-        this.floor = new double[(int) 1000];
-        for (int a = 0; a < 1000; a++) {
+        this.floor = new double[(int) 1100];
+        for (int a = 0; a < 1100; a++) {
             this.floor[a] = ins.readDouble();
         }
  
@@ -83,8 +83,8 @@ public final class terrain_lcmt implements lcm.lcm.LCMEncodable
     public lcmtypes.terrain_lcmt copy()
     {
         lcmtypes.terrain_lcmt outobj = new lcmtypes.terrain_lcmt();
-        outobj.floor = new double[(int) 1000];
-        System.arraycopy(this.floor, 0, outobj.floor, 0, 1000); 
+        outobj.floor = new double[(int) 1100];
+        System.arraycopy(this.floor, 0, outobj.floor, 0, 1100); 
         return outobj;
     }
  

@@ -47,6 +47,7 @@ class cart_pole_lcmt(object):
         return self
     _decode_one = staticmethod(_decode_one)
 
+    _hash = None
     def _get_hash_recursive(parents):
         if cart_pole_lcmt in parents: return 0
         tmphash = (0xd4aaa707e5c69bc8) & 0xffffffffffffffff
@@ -60,8 +61,4 @@ class cart_pole_lcmt(object):
             cart_pole_lcmt._packed_fingerprint = struct.pack(">Q", cart_pole_lcmt._get_hash_recursive([]))
         return cart_pole_lcmt._packed_fingerprint
     _get_packed_fingerprint = staticmethod(_get_packed_fingerprint)
-
-    def get_hash(self):
-        """Get the LCM hash of the struct"""
-        return struct.unpack(">Q", cart_pole_lcmt._get_packed_fingerprint())[0]
 

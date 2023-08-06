@@ -38,7 +38,7 @@ LocoParams::LocoParams()
     terminal_theta3 = M_PI / 2;
     healthy_state_range = 100;
 
-    max_steps = 5000;
+    max_steps = 80;
 
     time_skipping = 5;
 
@@ -77,4 +77,9 @@ LocoParams::LocoParams()
     min_dist = 0.5;
 
     terrain_hor = 10;
+
+    terrain_density = 0.1;
+    max_env_dist = 100;
+    rough_terrain_start =  floor(4 / terrain_density);
+
 }

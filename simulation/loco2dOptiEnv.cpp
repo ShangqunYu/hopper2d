@@ -55,7 +55,7 @@ State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_c
     // cout<<"xk_des: "<<xk_des<<endl;
     log = locooptimize2d(p, s, cdata, xk_des, desired_vel);
     // cout<<"log.x: "<<log.x<<endl;
-    if (log.done || num_steps >100){
+    if (log.done || num_steps >p.max_steps){
         initstate();
         if (log.done){
             s.reward = -10;
@@ -195,26 +195,24 @@ MatrixXd loco2dOptiEnv::get_desireX(double desired_vel){
 
 void loco2dOptiEnv::generate_terrain(){
     // first of all set everything to be 1, which means flat ground
-    terrain = VectorXd::Ones(1000);
+    int num_tile = floor(p.max_env_dist / p.terrain_density) +100;
+    terrain = VectorXd::Ones(num_tile);
     // then randomly generate some pits, 
     srand (time(NULL));
 
-    for (int i = 20; i<900; i+=16){
+    for (int i = p.rough_terrain_start; i<num_tile-40; i+=40){
 
-        int pit = 2 + rand() % 13 + i;
+        int pit = 4 + rand() % 35 + i;
         int choice = rand() % 3;
         switch (choice){
             case 0:
-                terrain(pit) = 0;
-                terrain(pit+1) = 0;
+                add_pit(pit, 2);
                 break;
             case 1:
-                terrain(pit) = 0;
-                terrain(pit+1) = 0;
-                terrain(pit+2) = 0;
+                add_pit(pit, 3);
                 break;
             case 2:
-                terrain(pit) = 0;
+                add_pit(pit, 5);
                 break;
         }
     }
@@ -223,9 +221,15 @@ void loco2dOptiEnv::generate_terrain(){
 
 }
 
+void loco2dOptiEnv::add_pit(int start, int len){
+    for (int i=start; i<start+len; i++){
+        terrain(i) = 0;
+    }
+}
+
 bool loco2dOptiEnv::checkinthepit(double x){
     double dist = (x<0)? 0: x;
-    int idx = (int) (dist / 0.25);
+    int idx = (int) (dist / p.terrain_density);
     if (terrain(idx) == 0){
         return true;
     }
@@ -236,7 +240,7 @@ bool loco2dOptiEnv::checkinthepit(double x){
 
 VectorXd loco2dOptiEnv::get_terrain_obs(){
     double x = (s.x(0)<0)?0:s.x(0);
-    int idx = (int)floor(x/0.25);
+    int idx = (int)floor(x / p.terrain_density);
     VectorXd obs(p.terrain_hor);
     for (int i=0; i<p.terrain_hor; i++){
         obs(i) = terrain[idx+1+i];

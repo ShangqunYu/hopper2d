@@ -20,9 +20,10 @@ public class loco2dopti_subscribe : MonoBehaviour
 
     public static float[] left_foot_pos = new float[3];
 
-    public static double[] floor = new double[500];
+    public static double[] floor = new double[1000];
     public static GameObject[] boxes;
     public static GameObject backbox;
+    public float terrain_density = 0.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -39,8 +40,8 @@ public class loco2dopti_subscribe : MonoBehaviour
 
         for (int i = 0; i < boxes.Length; i++) {
             boxes[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, -1.05f, 0); // Change the position as per your requirement
-            boxes[i].transform.localScale = new Vector3(0.25f, 0.1f, 2f); // Change the scale as per your requirement
+            boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, -1.05f, 0); // Change the position as per your requirement
+            boxes[i].transform.localScale = new Vector3(terrain_density, 0.1f, 2f); // Change the scale as per your requirement
         }
 
     }
@@ -59,9 +60,9 @@ public class loco2dopti_subscribe : MonoBehaviour
 
         for (int i = 0; i < boxes.Length; i++) {
             if (floor[i]==1){
-                boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, - 0.05f, 0); 
+                boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 0.05f, 0); 
             } else {
-                boxes[i].transform.position = new Vector3(i * 0.25f + 0.125f, - 1.05f, 0); 
+                boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 1.05f, 0); 
             }
             
         }

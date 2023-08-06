@@ -27,7 +27,7 @@ env = gym.make('Loco2dOptiEnv-v0')
 obs,_ = env.reset()
 # breakpoint()
 # model = SAC.load("./logs/optijumpJuly18/opti_960000_steps.zip")
-model = SAC.load("./logs/optijumpAug2/best_model.zip", env=env, custom_objects = {'observation_space': env.observation_space, 'action_space': env.action_space})
+model = SAC.load("./logs/optijumpAug4/best_model.zip", env=env, custom_objects = {'observation_space': env.observation_space, 'action_space': env.action_space})
 
 done = False
 count = 0
@@ -44,7 +44,7 @@ while not done:
     action[5] =  act[5] * 0.2  + 0.3  # l_flight_dts  range from 0.0 to 0.8
     action[6] =  act[6] * 0.3  + 0.5  # l_contact_dts range from 0.2 to 0.8
     visualize_contact(action)
-    # breakpoint()
+    breakpoint()
     obs, reward, done, _, info = env.step(act)
     totalReward += reward
     env.render()

@@ -70,6 +70,9 @@ class LocoParams {
         int max_iter;
 
         double min_dist;
-
+        // env parameters:
         int terrain_hor;
+        double terrain_density;
+        double max_env_dist;
+        int rough_terrain_start;
 };

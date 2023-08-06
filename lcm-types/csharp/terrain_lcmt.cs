@@ -16,11 +16,11 @@ namespace LCMTypes
  
         public terrain_lcmt()
         {
-            floor = new double[1000];
+            floor = new double[1100];
         }
  
         public static readonly ulong LCM_FINGERPRINT;
-        public static readonly ulong LCM_FINGERPRINT_BASE = 0x73b4665c25b4a6c6L;
+        public static readonly ulong LCM_FINGERPRINT_BASE = 0x73b4665c25b5a6c6L;
  
         static terrain_lcmt()
         {
@@ -47,7 +47,7 @@ namespace LCMTypes
  
         public void _encodeRecursive(LCMDataOutputStream outs)
         {
-            for (int a = 0; a < 1000; a++) {
+            for (int a = 0; a < 1100; a++) {
                 outs.Write(this.floor[a]); 
             }
  
@@ -74,8 +74,8 @@ namespace LCMTypes
  
         public void _decodeRecursive(LCMDataInputStream ins)
         {
-            this.floor = new double[(int) 1000];
-            for (int a = 0; a < 1000; a++) {
+            this.floor = new double[(int) 1100];
+            for (int a = 0; a < 1100; a++) {
                 this.floor[a] = ins.ReadDouble();
             }
  
@@ -84,8 +84,8 @@ namespace LCMTypes
         public LCMTypes.terrain_lcmt Copy()
         {
             LCMTypes.terrain_lcmt outobj = new LCMTypes.terrain_lcmt();
-            outobj.floor = new double[(int) 1000];
-            for (int a = 0; a < 1000; a++) {
+            outobj.floor = new double[(int) 1100];
+            for (int a = 0; a < 1100; a++) {
                 outobj.floor[a] = this.floor[a];
             }
  
