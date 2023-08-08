@@ -14,7 +14,7 @@
 class terrain_lcmt
 {
     public:
-        double     floor[1100];
+        double     floor[1500];
 
     public:
         /**
@@ -112,7 +112,7 @@ int terrain_lcmt::_encodeNoHash(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->floor[0], 1100);
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->floor[0], 1500);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
@@ -122,7 +122,7 @@ int terrain_lcmt::_decodeNoHash(const void *buf, int offset, int maxlen)
 {
     int pos = 0, tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->floor[0], 1100);
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->floor[0], 1500);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
@@ -131,13 +131,13 @@ int terrain_lcmt::_decodeNoHash(const void *buf, int offset, int maxlen)
 int terrain_lcmt::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
-    enc_size += __double_encoded_array_size(NULL, 1100);
+    enc_size += __double_encoded_array_size(NULL, 1500);
     return enc_size;
 }
 
 uint64_t terrain_lcmt::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x73b4665c25b5a6c6LL;
+    uint64_t hash = 0x73b4665c25b9a6c6LL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

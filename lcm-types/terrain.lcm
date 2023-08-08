@@ -1,5 +1,5 @@
 struct terrain_lcmt
 {
-    double floor[1100];
+    double floor[1500];
 }
 

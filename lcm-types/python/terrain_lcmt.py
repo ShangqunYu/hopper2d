@@ -14,10 +14,10 @@ class terrain_lcmt(object):
 
     __typenames__ = ["double"]
 
-    __dimensions__ = [[1100]]
+    __dimensions__ = [[1500]]
 
     def __init__(self):
-        self.floor = [ 0.0 for dim0 in range(1100) ]
+        self.floor = [ 0.0 for dim0 in range(1500) ]
 
     def encode(self):
         buf = BytesIO()
@@ -26,7 +26,7 @@ class terrain_lcmt(object):
         return buf.getvalue()
 
     def _encode_one(self, buf):
-        buf.write(struct.pack('>1100d', *self.floor[:1100]))
+        buf.write(struct.pack('>1500d', *self.floor[:1500]))
 
     def decode(data):
         if hasattr(data, 'read'):
@@ -40,14 +40,14 @@ class terrain_lcmt(object):
 
     def _decode_one(buf):
         self = terrain_lcmt()
-        self.floor = struct.unpack('>1100d', buf.read(8800))
+        self.floor = struct.unpack('>1500d', buf.read(12000))
         return self
     _decode_one = staticmethod(_decode_one)
 
     _hash = None
     def _get_hash_recursive(parents):
         if terrain_lcmt in parents: return 0
-        tmphash = (0x73b4665c25b5a6c6) & 0xffffffffffffffff
+        tmphash = (0x73b4665c25b9a6c6) & 0xffffffffffffffff
         tmphash  = (((tmphash<<1)&0xffffffffffffffff) + (tmphash>>63)) & 0xffffffffffffffff
         return tmphash
     _get_hash_recursive = staticmethod(_get_hash_recursive)

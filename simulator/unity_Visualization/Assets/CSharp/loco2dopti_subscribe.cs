@@ -23,11 +23,13 @@ public class loco2dopti_subscribe : MonoBehaviour
     public static double[] floor = new double[1000];
     public static GameObject[] boxes;
     public static GameObject backbox;
-    public float terrain_density = 0.1f;
+    public static float terrain_density = 0.1f;
+    public static float get_new_terrain;
 
     // Start is called before the first frame update
     void Start()
     {
+        get_new_terrain = 0f;
         StartCoroutine("Listener");
         this.torso = this.transform.GetChild(0);
         this.right_link_foot = this.transform.GetChild(1);
@@ -58,14 +60,22 @@ public class loco2dopti_subscribe : MonoBehaviour
         this.left_link_foot.localPosition = new Vector3(left_foot_pos[0],left_foot_pos[1],0);
         this.left_link_foot.localRotation = Quaternion.Euler(0, 0, (float) 90);  
 
-        for (int i = 0; i < boxes.Length; i++) {
-            if (floor[i]==1){
-                boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 0.05f, 0); 
-            } else {
-                boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 1.05f, 0); 
-            }
+        if (get_new_terrain == 1f){
             
+            
+            for (int i = 0; i < boxes.Length; i++) {
+                if (floor[i]==1){
+                    boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 0.05f, 0); 
+                } else {
+                    Debug.Log (i);
+                    boxes[i].transform.position = new Vector3(i * terrain_density + terrain_density/2, - 1.05f, 0); 
+                }
+                
+            }
+            get_new_terrain = 0f;
         }
+
+
     }
 
 
@@ -74,7 +84,7 @@ public class loco2dopti_subscribe : MonoBehaviour
 
         public void MessageReceived(LCM.LCM.LCM lcm, string channel, LCM.LCM.LCMDataInputStream dins)
         {
-            Debug.Log ("RECV: " + channel);
+            // Debug.Log ("RECV: " + channel);
             if (channel == "loco2dOpti")
             {
                 LCMTypes.loco2dOpti_lcmt msg = new LCMTypes.loco2dOpti_lcmt(dins);
@@ -90,7 +100,7 @@ public class loco2dopti_subscribe : MonoBehaviour
                 }else{
                     right_foot_pos[1] = -5f;
                 }
-                Debug.Log("right_foot_pos on x" + right_foot_pos[0]);
+                // Debug.Log("right_foot_pos on x" + right_foot_pos[0]);
                 
                 right_foot_pos[2] = 0;
 
@@ -101,19 +111,22 @@ public class loco2dopti_subscribe : MonoBehaviour
                 }else{
                     left_foot_pos[1] = -5f;
                 }
-                Debug.Log("left_foot_pos on x" + left_foot_pos[0]);
+                // Debug.Log("left_foot_pos on x" + left_foot_pos[0]);
                 
                 left_foot_pos[2] = 0;
 
             }
 
             if (channel == "terrain") {
+                
+                Debug.Log("get_new_terrain: " + get_new_terrain);
                 LCMTypes.terrain_lcmt msg = new LCMTypes.terrain_lcmt(dins);
                 String message = "Received message of the type terrain:\n ";
                 Debug.Log (message);
                 for(int i = 0; i<500; ++i){
                     floor[i] = msg.floor[i];
                 }
+                get_new_terrain = 1f;
 
             }
 

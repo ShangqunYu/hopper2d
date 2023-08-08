@@ -38,11 +38,19 @@ State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_c
     loco_con_data cdata = get_contact_data(r_contact_loc, r_contact_hor , r_flight_hor, l_contact_loc, l_flight_hor, l_contact_hor);
     int l_remain_swing_hor = pred_hor - l_flight_hor - l_contact_hor;
     double swing_penalty = 0;
-    if (l_remain_swing_hor <= 3 ){
+    if (l_remain_swing_hor <= 2 ){
         swing_penalty -= 5;
     }
-    if (l_flight_hor <= 3 &&  l_contact_loc>=0.2){
+    if (l_flight_hor <= 2 &&  l_contact_loc>=0.2){
         swing_penalty -= 5;
+    }
+    // cout<<"r_contact_hor: "<<r_contact_hor<<endl;
+    // cout<<"l_contact_hor: "<<l_contact_hor<<endl;
+    // cout<<"r_flight_hor: "<<r_flight_hor<<endl;
+    // cout<<"l_flight_hor: "<<l_flight_hor<<endl;
+    
+    if (r_contact_hor == 4 && l_contact_hor == 8 && r_flight_hor == 6 && l_flight_hor == 3) {
+        swing_penalty += 8;
     }
     // cout<<"pred_hor: "<<pred_hor<<endl;
     // cout<<"l_remain_swing_hor: "<<l_remain_swing_hor<<endl;
@@ -195,7 +203,7 @@ MatrixXd loco2dOptiEnv::get_desireX(double desired_vel){
 
 void loco2dOptiEnv::generate_terrain(){
     // first of all set everything to be 1, which means flat ground
-    int num_tile = floor(p.max_env_dist / p.terrain_density) +100;
+    int num_tile = floor(p.max_env_dist / p.terrain_density) +500;
     terrain = VectorXd::Ones(num_tile);
     // then randomly generate some pits, 
     srand (time(NULL));

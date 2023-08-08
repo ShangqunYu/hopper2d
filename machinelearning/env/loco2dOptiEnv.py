@@ -41,11 +41,11 @@ class Loco2dOptiEnv(gym.Env):
     def normalize_action(self, action):
         action[0] =  action[0] * 0.5 + 1     # desired_vel   range from 0.5 to 1.5
         action[1] =  action[1] + 1           # r_contact_loc range from 0 to 2    
-        action[2] =  action[2] * 0.2 + 0.3   # r_contact_dts range from 0.1 to 0.5
-        action[3] =  action[3] * 0.25 + 0.55 # r_flight_dts  range from 0.3 to 0.8
+        action[2] =  action[2] * 0.3 + 0.27   # r_contact_dts range from 0.03 to 0.57
+        action[3] =  action[3] * 0.25 + 0.39 # r_flight_dts  range from 0.14 to 0.64
         action[4] =  action[4] * 0.4  + 0.5  # l_contact_loc range from 0.1 to 0.9
-        action[5] =  action[5] * 0.2  + 0.3  # l_flight_dts  range from 0.0 to 0.8
-        action[6] =  action[6] * 0.3  + 0.5  # l_contact_dts range from 0.2 to 0.8
+        action[5] =  action[5] * 0.2  + 0.21  # l_flight_dts  range from 0.01 to 0.41
+        action[6] =  action[6] * 0.4  + 0.51  # l_contact_dts range from 0.11 to 0.91
 
         # print(action)
         return action
