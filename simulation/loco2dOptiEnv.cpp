@@ -8,7 +8,7 @@ loco2dOptiEnv::loco2dOptiEnv(){
 State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_contact_dts, double r_flight_dts, double l_contact_loc, double l_flight_dts, double l_contact_dts){
 
     // calculate the horizon based on dts
-    
+    // cout<<"r_contact_dts " <<r_contact_dts << endl;
     int r_contact_hor = floor(r_contact_dts / p.opt_dt);
     int r_flight_hor = floor(r_flight_dts / p.opt_dt);
     pred_hor = r_contact_hor + r_flight_hor + r_contact_hor;  // +1 is for the contact after flight
@@ -49,8 +49,9 @@ State2d loco2dOptiEnv::step(double desired_vel, double r_contact_loc, double r_c
     // cout<<"r_flight_hor: "<<r_flight_hor<<endl;
     // cout<<"l_flight_hor: "<<l_flight_hor<<endl;
     
-    if (r_contact_hor == 4 && l_contact_hor == 8 && r_flight_hor == 6 && l_flight_hor == 3) {
-        swing_penalty += 8;
+    if (r_contact_hor == 6 && l_contact_hor == 12 && r_flight_hor == 8 && l_flight_hor == 4) {
+        swing_penalty += 10;
+        // cout<<"here"<<endl;
     }
     // cout<<"pred_hor: "<<pred_hor<<endl;
     // cout<<"l_remain_swing_hor: "<<l_remain_swing_hor<<endl;

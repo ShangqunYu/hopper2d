@@ -18,8 +18,8 @@ class Loco2dOptiEnv(gym.Env):
 
 
     def step(self, action):
-        action = self.normalize_action(action)
-        obs = self.w.step(action)
+        act = self.normalize_action(action)
+        obs = self.w.step(act)
         # force the output for rdts and ldts to be close to 1
         reward = self.w.calc_reward()
         done = self.w.is_done()
@@ -39,15 +39,16 @@ class Loco2dOptiEnv(gym.Env):
         pass
 
     def normalize_action(self, action):
-        action[0] =  action[0] * 0.5 + 1     # desired_vel   range from 0.5 to 1.5
-        action[1] =  action[1] + 1           # r_contact_loc range from 0 to 2    
-        action[2] =  action[2] * 0.3 + 0.27   # r_contact_dts range from 0.03 to 0.57
-        action[3] =  action[3] * 0.25 + 0.39 # r_flight_dts  range from 0.14 to 0.64
-        action[4] =  action[4] * 0.4  + 0.5  # l_contact_loc range from 0.1 to 0.9
-        action[5] =  action[5] * 0.2  + 0.21  # l_flight_dts  range from 0.01 to 0.41
-        action[6] =  action[6] * 0.4  + 0.51  # l_contact_dts range from 0.11 to 0.91
+        act = np.zeros(7)
+        act[0] =  action[0] * 0.5 + 1     # desired_vel   range from 0.5 to 1.5
+        act[1] =  action[1] + 1           # r_contact_loc range from 0 to 2    
+        act[2] =  action[2] * 0.25 + 0.31   # r_contact_dts range from 0.02 to 0.52
+        act[3] =  action[3] * 0.25 + 0.41 # r_flight_dts  range from 0.14 to 0.64
+        act[4] =  action[4] * 0.4  + 0.5  # l_contact_loc range from 0.1 to 0.9
+        act[5] =  action[5] * 0.15  + 0.21  # l_flight_dts  range from 0.01 to 0.41
+        act[6] =  action[6] * 0.5  + 0.61  # l_contact_dts range from 0.11 to 0.91
 
         # print(action)
-        return action
+        return act
 
 

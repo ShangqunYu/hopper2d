@@ -6,7 +6,7 @@ import math
 import torch
 
 def visualize_contact(action):
-    dt = 0.06
+    dt = 0.05
     r_contact_hor = math.floor(action[2] / dt) 
     r_flight_hor =  math.floor(action[3] / dt)
     l_flight_hor =  math.floor(action[5] / dt)
@@ -18,6 +18,11 @@ def visualize_contact(action):
     output[1,l_flight_hor:l_flight_hor+ l_contact_hor] = 1
     print(output)
 
+def deact(action):
+    action[2] = 0.31
+    action[3] = 0.4
+    action[5] = 0.2
+    action[6] = 0.6
 
 gym.envs.register(
         id='Loco2dOptiEnv-v0',
@@ -35,17 +40,19 @@ totalReward = 0
 while not done:
     
     act, _ = model.predict(obs, deterministic=True)
-    breakpoint()
+    
     # act = np.zeros(7)
     action = np.zeros(7)
     action[0] =  act[0] * 0.5 + 1     # desired_vel   range from 0.5 to 1.5
     action[1] =  act[1] + 1           # r_contact_loc range from 0 to 2    
-    action[2] =  act[2] * 0.3 + 0.27   # r_contact_dts range from 0.03 to 0.57
-    action[3] =  act[3] * 0.25 + 0.39 # r_flight_dts  range from 0.14 to 0.64
+    action[2] =  act[2] * 0.25 + 0.31   # r_contact_dts range from 0.05 to 0.55
+    action[3] =  act[3] * 0.25 + 0.41 # r_flight_dts  range from 0.15 to 0.65
     action[4] =  act[4] * 0.4  + 0.5  # l_contact_loc range from 0.0 to 0.8
-    action[5] =  act[5] * 0.2  + 0.21  # l_flight_dts  range from 0.01 to 0.41
-    action[6] =  act[6] * 0.4  + 0.51   # l_contact_dts range from  0.11 to 0.91
+    action[5] =  act[5] * 0.15  + 0.21  # l_flight_dts  range from 0.05 to 0.35
+    action[6] =  act[6] * 0.5  + 0.61   # l_contact_dts range from  0.1 to 0.11
+    
     visualize_contact(action)
+    breakpoint()
     obs, reward, done, _, info = env.step(act)
     totalReward += reward
     env.render()

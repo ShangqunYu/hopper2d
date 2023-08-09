@@ -43,7 +43,7 @@ LocoParams::LocoParams()
     time_skipping = 5;
 
     //hypperparameters for optimization
-    opt_dt = 0.06;
+    opt_dt = 0.05;
 
     //cost weight
     
